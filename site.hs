@@ -69,7 +69,7 @@ runHakyll = hakyll $ do
 				
     -- Post tags
     tagsRules tags $ \tag pattern -> do
-        let title = "Заметки помеченные " ++ tag
+        let title = "Заметки помеченные “" ++ tag ++ "”"
         route idRoute
         compile $ do
             list <- postList tags pattern recentFirst
