@@ -1,8 +1,14 @@
-<div class="info">
-    Posted on $date$
-    $if(author)$
-        by $author$
-    $endif$
-</div>
+<article>
+<header>
+<h1>$title$</h1>
+$if(author)$
+<p>Автор: <em>$author$</em></p>
+$endif$
+<p>Дата: <strong>$date$</strong></p>
+<p>Метки: $prettytags$</p>
+</header>
 
+<section>
 $body$
+</section>
+</article>
