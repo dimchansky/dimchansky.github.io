@@ -37,6 +37,7 @@ runHakyll = hakyll $ do
         route $ setExtension "html"
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/post.html"    (tagsCtx tags)
+			>>= loadAndApplyTemplate "templates/disqus.html"  (tagsCtx tags)
             >>= loadAndApplyTemplate "templates/default.html" (tagsCtx tags)
             >>= relativizeUrls
 
