@@ -184,6 +184,16 @@ runHakyll :: IO ()
 runHakyll = hakyll $ do
 ```
 
+Для подсветки синтаксиса кода в папкe **css** создать файл `syntax.css`. Как пример, можно взять дефолтный [Pandoc syntax CSS file](https://github.com/jaspervdj/hakyll/blob/master/web/css/syntax.css), 
+а если хватает смелости, то можно его [допилить до нужной радуги](https://benjeffrey.com/pandoc-syntax-highlighting-css). Как оформлять код в markdown можно почитать в [документации по Pandoc](http://johnmacfarlane.net/pandoc/README.html#fenced-code-blocks), 
+код можно и [инлайнить](http://johnmacfarlane.net/pandoc/README.html#verbatim).
+Также нужно не забыть сослаться на этот CSS файл в файле `templates\default.html`:
+
+```html
+    <link rel="stylesheet" type="text/css" href="/css/default.css" />
+    <link rel="stylesheet" type="text/css" href="/css/syntax.css" />
+```
+
 Теперь можно сохранить все изменения в ветке **sources**:
 	
     $ git add -A .
