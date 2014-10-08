@@ -37,7 +37,7 @@ runHakyll = hakyll $ do
         route wordpressRoute
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/post.html"    (tagsCtx tags)
-			>>= loadAndApplyTemplate "templates/disqus.html"  (tagsCtx tags)
+            >>= loadAndApplyTemplate "templates/disqus.html"  (tagsCtx tags)
             >>= loadAndApplyTemplate "templates/default.html" (tagsCtx tags)
             >>= wordpressifyUrls
 
@@ -109,7 +109,7 @@ allPostsCtx =
 homeCtx :: Tags -> String -> Context String
 homeCtx tags list =
     constField "posts" list `mappend`
-    constField "title" "Index" `mappend`
+    constField "title" "Начало начал" `mappend`
     field "taglist" (\_ -> renderTagList tags) `mappend`
     defaultContext
 
