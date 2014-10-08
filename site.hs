@@ -154,13 +154,12 @@ deIndexedUrlField key = field key
 --------------------------------------------------------------------------------
 wordpressRoute :: Routes
 wordpressRoute =
-    gsubRoute "posts/" (const "") `composeRoutes`
-        gsubRoute "^[0-9]{4}-[0-9]{2}-[0-9]{2}-" (map replaceWithSlash)`composeRoutes`
-            gsubRoute ".markdown" (const "/index.html")
+    gsubRoute "^posts/[0-9]{4}-[0-9]{2}-[0-9]{2}-" (map replaceWithSlash) `composeRoutes`
+    gsubRoute ".markdown$" (const "/index.html")
     where replaceWithSlash c = if c == '-' || c == '_'
                                    then '/'
                                    else c   
-    
+								   
 --------------------------------------------------------------------------------    
 myFeedConfiguration :: FeedConfiguration
 myFeedConfiguration = FeedConfiguration
