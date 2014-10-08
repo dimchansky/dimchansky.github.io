@@ -1,16 +1,16 @@
 body {
-    max-width: 45em;
+    max-width: 70em;
     min-width: 20em;
     margin: auto;
     padding: 1em;
-    font-family: 'Crimson Text', serif;
-    font-size: 18px;
-    line-height: 1.4em;
+    font-family: Verdana, sans-serif;
+    font-size: 15px;
+    line-height: 1.6em;
 }
 
 h1, h2, h3, h4, h5, h6 {
     line-height: 1.1em;
-    font-family: Lato, Helvetica, Arial, sans-serif;
+    font-family: Verdana, Tahoma, sans-serif;
 }
 
 p {
@@ -23,13 +23,17 @@ p {
 }
 
 pre {
-    padding: 1em;
-    overflow-x: auto;
+    padding: 0.5em;
 }
 
 code, pre {
-    background-color: #ddd;
-    font-size: 16px;
+    font-family: Menlo, Monaco, "Courier New", monospace;
+    font-size: 15px;
+    background-color: #f7f7f9;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    line-height: 1.3em;
 }
 
 body>header h1 {
