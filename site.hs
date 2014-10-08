@@ -31,15 +31,15 @@ runHakyll = hakyll $ do
         route   $ setExtension "html"
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
-            >>= relativizeUrls
+            >>= wordpressifyUrls
 
     match "posts/*" $ do
-        route $ setExtension "html"
+        route wordpressRoute
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/post.html"    (tagsCtx tags)
 			>>= loadAndApplyTemplate "templates/disqus.html"  (tagsCtx tags)
             >>= loadAndApplyTemplate "templates/default.html" (tagsCtx tags)
-            >>= relativizeUrls
+            >>= wordpressifyUrls
 
     -- Render posts list
     create ["posts.html"] $ do
@@ -52,7 +52,7 @@ runHakyll = hakyll $ do
             makeItem list
                 >>= loadAndApplyTemplate "templates/posts.html" allPostsCtx
                 >>= loadAndApplyTemplate "templates/default.html" allPostsCtx
-                >>= relativizeUrls			
+                >>= wordpressifyUrls			
 	
 	-- Index
     create ["index.html"] $ do
@@ -65,7 +65,7 @@ runHakyll = hakyll $ do
             makeItem list
                 >>= loadAndApplyTemplate "templates/index.html" (homeCtx tags list)
                 >>= loadAndApplyTemplate "templates/default.html" (homeCtx tags list)
-                >>= relativizeUrls
+                >>= wordpressifyUrls
 				
 				
     -- Post tags
@@ -82,7 +82,7 @@ runHakyll = hakyll $ do
                 >>= loadAndApplyTemplate "templates/default.html"
                         (constField "title" title `mappend`
                             defaultContext)
-                >>= relativizeUrls
+                >>= wordpressifyUrls
 				
     match "templates/*" $ compile templateCompiler
 
@@ -93,16 +93,19 @@ postCtx =
     dateField "date" "%B %e, %Y" `mappend`
     defaultContext
 
+--------------------------------------------------------------------------------
 tagsCtx :: Tags -> Context String
 tagsCtx tags =
     tagsField "prettytags" tags `mappend`
     postCtx	
-	
+
+--------------------------------------------------------------------------------	
 allPostsCtx :: Context String
 allPostsCtx =
     constField "title" "Все заметки" `mappend`
     postCtx	
-	
+
+--------------------------------------------------------------------------------	
 homeCtx :: Tags -> String -> Context String
 homeCtx tags list =
     constField "posts" list `mappend`
@@ -110,6 +113,7 @@ homeCtx tags list =
     field "taglist" (\_ -> renderTagList tags) `mappend`
     defaultContext
 
+--------------------------------------------------------------------------------
 postList :: Tags
          -> Pattern
          -> ([Item String] -> Compiler [Item String])
@@ -119,3 +123,32 @@ postList tags pattern preprocess' = do
     posts <- loadAll pattern
     processed <- preprocess' posts
     applyTemplateList postItemTpl (tagsCtx tags) processed	
+
+--------------------------------------------------------------------------------
+wordpressRoute :: Routes
+wordpressRoute =
+    gsubRoute "posts/" (const "") `composeRoutes`
+        gsubRoute "^[0-9]{4}-[0-9]{2}-[0-9]{2}-" (map replaceWithSlash)`composeRoutes`
+            gsubRoute ".markdown" (const "/index.html")
+    where replaceWithSlash c = if c == '-' || c == '_'
+                                   then '/'
+                                   else c	
+	
+--------------------------------------------------------------------------------
+-- | Compiler form of 'wordpressUrls' which automatically turns index.html
+-- links into just the directory name
+wordpressifyUrls :: Item String -> Compiler (Item String)
+wordpressifyUrls item = do
+    route <- getRoute $ itemIdentifier item
+    return $ case route of
+        Nothing -> item
+        Just r  -> fmap wordpressifyUrlsWith item
+
+
+--------------------------------------------------------------------------------
+-- | Wordpressify URLs in HTML
+wordpressifyUrlsWith :: String  -- ^ HTML to wordpressify
+                     -> String  -- ^ Resulting HTML
+wordpressifyUrlsWith = withUrls convert
+  where
+    convert x = replaceAll "/index.html" (const "/") x
