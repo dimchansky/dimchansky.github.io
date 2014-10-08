@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Непутёвые заметки Димчанского</title>
+    <link href="http://dimchansky.github.io/atom.xml" rel="self" />
+    <link href="http://dimchansky.github.io" />
+    <id>http://dimchansky.github.io/atom.xml</id>
+    <author>
+        <name>Dmitrij Koniajev</name>
+        <email>dimchansky@gmail.com</email>
+    </author>
+    <updated>2014-10-07T00:00:00Z</updated>
+    <entry>
+    <title>Создаем блог с помощью Hakyll</title>
+    <link href="http://dimchansky.github.io/2014/10/07/getting-started-with-hakyll/" />
+    <id>http://dimchansky.github.io/2014/10/07/getting-started-with-hakyll/</id>
+    <published>2014-10-07T00:00:00Z</published>
+    <updated>2014-10-07T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Подробное описание процесса создания блога на github с помощью Hakyll под Windows]]></summary>
+</entry>
+<entry>
+    <title>Первый пост</title>
+    <link href="http://dimchansky.github.io/2014/10/06/first-post/" />
+    <id>http://dimchansky.github.io/2014/10/06/first-post/</id>
+    <published>2014-10-06T00:00:00Z</published>
+    <updated>2014-10-06T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Описывает начало очередного витка спирали жизни]]></summary>
+</entry>
+
+</feed>
