@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="author" content="Dmitrij Koniajev" />		
+        <title>Создаем блог с помощью Hakyll - Непутёвые заметки Димчанского</title>
+        <link rel="stylesheet" type="text/css" href="/css/default.css" />
+		<link rel="stylesheet" type="text/css" href="/css/syntax.css" />
+		
+		<script type="text/javascript">
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-41629923-3', 'auto');
+		  ga('send', 'pageview');
+
+		</script>		
+    </head>
+    <body>
+		<header>
+			<hgroup>
+				<h1><a href="/">Непутёвые заметки Димчанского</a></h1>
+			</hgroup>		
+		</header>
+		<nav>
+			<menu>
+				<a href="/">В начало</a>
+                <a href="/about.html">Обо мне</a>
+                <a href="/contact.html">Контакты</a>
+                <a href="/posts.html">Архив</a>
+				</menu>
+		</nav>		
+
+        <section>
+            <article>
+<header>
+<h1>Создаем блог с помощью Hakyll</h1>
+
+<p>Дата: <strong>October  7, 2014</strong></p>
+<p>Метки: <a href="/tags/hakyll.html">hakyll</a>, <a href="/tags/haskell.html">haskell</a>, <a href="/tags/windows.html">windows</a></p>
+</header>
+
+<section>
+<p><a href="http://jaspervdj.be/hakyll/">Hakyll</a> является движком для генерации статических сайтов, написанном на <a href="http://www.haskell.org/">Haskell</a>. Именно с помощью этого движка были сгенерированы страницы этого блога. Вы просто описываете содержимое страниц в удобном формате (обычно используется <a href="https://ru.wikipedia.org/wiki/Markdown">markdown</a>, но, при необходимости, можно использовать и TeX - все это достигается благодаря тесной интеграции с <a href="http://johnmacfarlane.net/pandoc/">pandoc</a>, тоже написанном на Haskell), затем на Haskell описываете конфигурацию сайта, по каким правилам и как нужно собрать страницы, компилируете конфигурацию и с помощью нее потом собираете страницы сайта. Благодаря pandoc в сгенерированных страницах можно использовать подсветку кода и другие полезные плюшки.</p>
+<p>С одной стороны мне очень не хочется создавать N+1 описание Hakyll’a для начинающих, но с другой стороны хочется указать на возможные при компиляции и использовании Hakyll под Windows грабли. В качестве хостинга для нашего создаваемого сайта мы будем использовать <a href="https://github.com/">GitHub</a>.</p>
+<p>Необходимым минимумом для создании своего сайта с помощью Hakyll являются:</p>
+<ul>
+<li>Минимальные знания Haskell или желание его <a href="http://tryhaskell.org/">изучить</a></li>
+<li>Установленную <a href="http://www.haskell.org/platform/windows.html">Haskell Platform for Windows</a></li>
+<li>Установленный пакет <a href="https://code.google.com/p/gitextensions/">Git Extensions</a>. Этот пакет на нужен будет не только для более удобной работы с Git, но и для того, чтобы скомпилировать network пакет в Git bash. В обычной консоли его собрать не получится.</li>
+</ul>
+<p>Для начала следует убедиться, что <a href="https://ru.wikipedia.org/wiki/Cabal">cabal</a> прописан в путях. Для этого открываем консоль и там пишем, к примеру,</p>
+<pre><code>&gt; cabal --version</code></pre>
+<p>Если cabal не удалось найти, прописываем в PATH (в зависимости от разрядности установленной Haskell Platform):</p>
+<pre><code>C:\Program Files (x86)\Haskell Platform\2014.2.0.0\lib\extralibs\bin
+C:\Program Files (x86)\Haskell Platform\2014.2.0.0\bin</code></pre>
+<p>Убеждаемся, что теперь cabal работает и теперь мы переходим к непосредственно сборке Hakyll. Создаем каталог, в котором будем собирать Hakyll. Я в примерах буду использовать <code>C:\Hakyll</code>. Переходим в созданный каталог и там создаем песочницу, в которой будет происходить сборка:</p>
+<pre><code>&gt; cd C:\Hakyll
+&gt; cabal sandbox init</code></pre>
+<p>Cabal должен бодро сообщить, что песочница создана:</p>
+<pre><code>Writing a default package environment file to
+C:\Hakyll\cabal.sandbox.config
+Creating a new sandbox at C:\Hakyll\.cabal-sandbox</code></pre>
+<p>Если не создать песочницы и начать сборку, то все бинарники будут собираться в каталог <code>%APPDATA%\cabal\bin</code> и там же рядом будут устанавливаться пакеты. Чтобы не было конфликтов с версиями пакетов, хорошей практикой считается создание песочницы с последующей установкой в нее всего необходимого. Причем одну песочницу можно использовать между несколькими проектами. Все дальнейшие вызовы <code>cabal</code> необходимо производить исключительно из каталога, в котором мы создали песочницу, т.е. из <code>C:\Hakyll\</code>.</p>
+<p>Теперь нам нужно собрать пакет network. Собирать его нужно в unix-подобной консоли, поэтому запустим Git Extensions и там откроем Git bash (либо комбинацией Ctrl+G, либо через меню Git → Git bash). Git bash консоль я буду помечать символом <code>$</code> в начале строки. Переходим в наш каталог (обращаем внимание на то как указывается путь), обновляем репозиторий cabal и собираем пакет network:</p>
+<pre><code>$ cd /c/Hakyll/
+$ cabal update
+$ cabal install network</code></pre>
+<p>Никаких сообщений об ошибках быть не должно. Теперь возвращаемся в обычную консоль и в ней собираем pandoc, а затем и hakyll. На данный момент есть <a href="https://github.com/jgm/pandoc/issues/1590">известная проблема сборки pandoc</a>, поэтому собирать будем с дополнительным параметром:</p>
+<pre><code>&gt; cd C:\Hakyll
+&gt; cabal install pandoc -fhttps
+&gt; cabal install hakyll</code></pre>
+<p>После сборки в каталоге <code>C:\Hakyll\.cabal-sandbox\bin</code> мы должны увидеть следующие бинарники:</p>
+<pre><code>aeson-pretty.exe
+hakyll-init.exe
+json2yaml.exe
+pandoc-citeproc.exe
+pandoc.exe
+simple.exe
+yaml2json.exe</code></pre>
+<p>Теперь, когда все готово к созданию сайта, нужно, если этого еще не сделали, создать репозиторий <code>&lt;имя пользователя&gt;.github.io</code> на GitHub - это так называемый <a href="https://help.github.com/articles/user-organization-and-project-pages/">User page</a>. В моем случае конечный путь до созданного репозитория выглядел так:</p>
+<p><a href="https://github.com/dimchansky/dimchansky.github.io" class="uri">https://github.com/dimchansky/dimchansky.github.io</a></p>
+<p>Все, что будет лежать в ветке <strong>master</strong> этого репозитория, будет доступно по адресу <a href="http://dimchansky.github.io/" class="uri">http://dimchansky.github.io/</a> (вместо <strong>dimchansky</strong> здесь и далее везде пишите свое имя). Понятно, что исходный код нам нужно будет положить в другую ветку, например, <strong>sources</strong> и так как содержимое веток <strong>master</strong> и <strong>sources</strong> будеть сильно отличаться и нам нужно будет постоянно копировать новую собранную версию в <strong>master</strong>, то постоянно переключаться между двумя ветками будет создавать сильные неудобства. Чтобы избежать этого, сделаем небольшой финт ушами, чтобы две ветки одного и того же репозитория лежали в разных папках:</p>
+<pre><code>C:\Hakyll
+└── dimchansky.github.io
+    ├── master
+    └── sources</code></pre>
+<p>Я намеренно сделал дополнительно папку <code>dimchansky.github.io</code> внутри <code>Hakyll</code> на случай, если я захочу создать еще какой-нибудь сайтик с использованием Hakyll. Теперь нам снова понадобится Git bash консоль, т.к. мы будем выполнять команды git. Создадим папку для работы с веткой <strong>master</strong> (не забываем вместо <strong>dimchansky</strong> везде писать своем имя):</p>
+<pre><code>$ cd /c/Hakyll/
+$ mkdir -p dimchansky.github.io/master
+$ cd dimchansky.github.io/master
+$ git init
+$ touch .gitignore
+$ git add .
+$ git commit -m &quot;Initial commit.&quot;
+$ git remote add origin git@github.com:dimchansky/dimchansky.github.io.git
+$ git push origin master</code></pre>
+<p>Теперь в той же консоли создадим папку для работы с веткой <strong>sources</strong>:</p>
+<pre><code>$ cd ..
+$ git clone -o unrelated master sources
+$ cd sources
+$ git checkout --orphan sources
+$ git commit -m &quot;Initial commit (sources).&quot;
+$ git branch -d master
+$ git remote add origin git@github.com:dimchansky/dimchansky.github.io.git
+$ git push origin sources</code></pre>
+<p>Обратите внимание, что ветку <strong>master</strong> мы удалили здесь и хоть git ругнется - это нормально. Теперь дело осталось за малым - создать начальную конфигурацию сайта, скомпилировать ее и затем с помощью полученного бинарника сгенерировать страницы сайта. Находясь в каталоге <strong>sources</strong> укажем, что мы хотим использовать уже имеющуюся песочницу:</p>
+<pre><code>$ cabal sandbox init --sandbox ../../.cabal-sandbox</code></pre>
+<p>Теперь с помощью Hakyll создадим начальную конфигурацию сайта:</p>
+<pre><code>$ ../../.cabal-sandbox/bin/hakyll-init.exe blog</code></pre>
+<p>Он в нашей папке sources создаст папку blog, нам такой вложенности не надо, поэтому поднимем все на уровень выше:</p>
+<pre><code>$ mv -v blog/* .
+$ rmdir blog</code></pre>
+<p>Теперь нужно подредактировать файл <code>.gitignore</code> и вписать в него такие строки:</p>
+<pre><code>_site
+_cache
+dist
+.cabal-sandbox
+cabal.sandbox.config</code></pre>
+<p>Это нужно, чтобы не пихать в ветку <strong>sources</strong> каталоги и файлы:</p>
+<ul>
+<li><strong>_site</strong> - каталог, в котором будут сгенерированные статические страницы</li>
+<li><strong>_cache</strong> - кеш страниц, который создаст для себя сборщик нашего сайта</li>
+<li><strong>dist</strong> - каталог, куда будет собран наша конфигуратор сайта</li>
+<li><strong>.cabal-sandbox</strong> - каталог песочницы</li>
+<li>cabal.sandbox.config - файл конфигурации песочницы</li>
+</ul>
+<p>Можно посмотреть, какие же файлы и каталоги были созданы Hakyll’ом:</p>
+<ul>
+<li>about.rst - страница “About”</li>
+<li>blog.cabal - файл для сборки нашего конфигуратора или генератора статических страниц</li>
+<li>contact.markdown - страница “Contact”</li>
+<li><strong>css</strong> - стили сайта</li>
+<li><strong>images</strong> - картинки сайта</li>
+<li>index.html - содержимое главнойстраницы сайта</li>
+<li><strong>posts</strong> - примеры заметок в формате markdown</li>
+<li>site.hs - описание na Haskell того, как нужно генерировать статические страницы</li>
+<li><strong>templates</strong> - каталог с шаблонами страниц</li>
+</ul>
+<p>В дальнейшем все можно в корне поменять, как нам будет удобно. Но пока сделаем одну модификацию в файле <code>site.hs</code>, чтобы он не спотыкался на страницах с UTF-8 кодировкой. Кстати говоря, набирая страницы в UTF-8 сохраняйте их без BOM, т.е. без первых двух байтов, которые любит notepad вставлять, как указатель того, что файл в юникоде. Можно в <a href="http://notepad-plus-plus.org/">notepad++</a>, например, указать <strong>Encoding → Encode in UTF-8 without BOM</strong>. Итак, открываем <code>site.hs</code> и меняем строки:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">--------------------------------------------------------------------------------</span>
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> hakyll <span class="fu">$</span> <span class="kw">do</span></code></pre>
+<p>на</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">import           </span><span class="dt">GHC.IO.Encoding</span>
+
+<span class="fu">--------------------------------------------------------------------------------</span>
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> <span class="kw">do</span>
+    setLocaleEncoding utf8
+    setFileSystemEncoding utf8
+    setForeignEncoding utf8    
+    runHakyll
+
+<span class="ot">runHakyll ::</span> <span class="dt">IO</span> ()
+runHakyll <span class="fu">=</span> hakyll <span class="fu">$</span> <span class="kw">do</span></code></pre>
+<p>Для подсветки синтаксиса кода в папкe <strong>css</strong> создать файл <code>syntax.css</code>. Как пример, можно взять дефолтный <a href="https://github.com/jaspervdj/hakyll/blob/master/web/css/syntax.css">Pandoc syntax CSS file</a>, а если хватает смелости, то можно его <a href="https://benjeffrey.com/pandoc-syntax-highlighting-css">допилить до нужной радуги</a>. Как оформлять код в markdown можно почитать в <a href="http://johnmacfarlane.net/pandoc/README.html#fenced-code-blocks">документации по Pandoc</a>, код можно и <a href="http://johnmacfarlane.net/pandoc/README.html#verbatim">инлайнить</a>. Также нужно не забыть сослаться на этот CSS файл в файле <code>templates\default.html</code>:</p>
+<pre class="sourceCode html"><code class="sourceCode html">    <span class="kw">&lt;link</span><span class="ot"> rel=</span><span class="st">&quot;stylesheet&quot;</span><span class="ot"> type=</span><span class="st">&quot;text/css&quot;</span><span class="ot"> href=</span><span class="st">&quot;/css/default.css&quot;</span> <span class="kw">/&gt;</span>
+    <span class="kw">&lt;link</span><span class="ot"> rel=</span><span class="st">&quot;stylesheet&quot;</span><span class="ot"> type=</span><span class="st">&quot;text/css&quot;</span><span class="ot"> href=</span><span class="st">&quot;/css/syntax.css&quot;</span> <span class="kw">/&gt;</span></code></pre>
+<p>Теперь можно сохранить все изменения в ветке <strong>sources</strong>:</p>
+<pre><code>$ git add -A .
+$ git commit -m &quot;Initial hakyll site&quot;
+$ git push origin sources</code></pre>
+<p>Собираем наш генератор сайта:</p>
+<pre><code>&gt; cabal build</code></pre>
+<p>С его помощью генерируем страницы сайта:</p>
+<pre><code>&gt; dist\build\site\site.exe build</code></pre>
+<p>Все сгенерированные страницы окажутся в каталоге <strong>_site</strong>. Можно теперь локально запустить сервер, который по адресу <a href="http://127.0.0.1:8000/" class="uri">http://127.0.0.1:8000/</a> покажет, как выглядит наш сайт</p>
+<pre><code>&gt; dist\build\site\site.exe watch</code></pre>
+<p>Кстати, при изменении, например, заметок, сервер автоматически перегенерирует измененные страницы. Однако, при изменении <code>site.hs</code> нужно сначала пересобрать генератор, а потом сам сайт:</p>
+<pre><code>&gt; cabal build
+&gt; dist\build\site\site.exe rebuild</code></pre>
+<p>Если порт 8000 уже занят чем-то, можно указать другой порт:</p>
+<pre><code>$ dist/build/site/site.exe watch --port 8080</code></pre>
+<p>Если нас все устраивает, можно все содержимое каталога <strong>_site</strong> скопировать в каталог master, перейти в него и отправить на github:</p>
+<pre><code>$ cd ../master
+$ git add -A .
+$ git commit -m &quot;Initial hakyll site&quot;
+$ git push origin master</code></pre>
+<p>Теперь по адресу <a href="http://dimchansky.github.io/" class="uri">http://dimchansky.github.io/</a> можно будет увидеть наш созданный сайт.</p>
+</section>
+</article>
+<section>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'dimchansky'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>		
+</section>
+
+        </section>
+		
+        <footer>
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </footer>		
+    </body>
+</html>
