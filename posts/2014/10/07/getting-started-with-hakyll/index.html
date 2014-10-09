@@ -181,6 +181,24 @@ $ git add -A .
 $ git commit -m &quot;Initial hakyll site&quot;
 $ git push origin master</code></pre>
 <p>Теперь по адресу <a href="http://dimchansky.github.io/" class="uri">http://dimchansky.github.io/</a> можно будет увидеть наш созданный сайт.</p>
+<p>Если вдруг потребуется отредактировать и перегенерировать сайт на другом компе, то для этого нужно:</p>
+<ul>
+<li>Установить Haskell Platform for Windows</li>
+<li>Установить Git Extensions</li>
+<li>Создать песочницу для cabal в каталоге Hakyll</li>
+<li>Собрать в ней Hakyll</li>
+</ul>
+<p>После этого создать каталоги для master и sources, клонировать в них только нужные ветки, и, находясь в каталоге sources, указать cabal, чтобы он использовал уже имеющуюся песочницу:</p>
+<pre><code>$ cd /c/Hakyll/
+$ mkdir -p dimchansky.github.io/master
+$ cd dimchansky.github.io/master
+$ git clone git@github.com:dimchansky/dimchansky.github.io.git -b master --single-branch .
+$ cd ..
+$ mkdir sources
+$ cd sources
+$ git clone git@github.com:dimchansky/dimchansky.github.io.git -b sources --single-branch .
+$ cabal sandbox init --sandbox ../../.cabal-sandbox</code></pre>
+<p>Ну а дальше, как и ранее, собираем конфигуратор и с его помощью генерируем страницы.</p>
 </section>
 </article>
 <section>
