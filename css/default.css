@@ -111,23 +111,43 @@ ins::before {
     content: ">> ";
 }
 
-div.social-share
-{
-    padding:6px 0 0 0;
-	border-top:1px solid #808080;
-	border-bottom: 1px solid #808080;
+.likebutton {
+  background-color:#FFFFFF;
+  background-position:initial initial;
+  background-repeat:initial initial;
+  border:1px dashed #F5F5DC;
+  float:left;
+  margin-bottom:5px;
+  padding:5px 20px 5px 5px;
+  width:596px;
 }
-
-div.social-share ul
-{
-    margin:0;
-	padding:0
+ 
+.podelites {
+  font-family:Arial;
+  font-size:15px;
+  font-style:oblique;
+  font-variant:normal;
+  font-weight:normal;
+  line-height:normal;
+  margin:12px 0;
+  text-align:center;
 }
-
-div.social-share ul li
-{
-    margin:0;
-	padding:0;
-	display:inline;
-	list-style-type:none
+ 
+.socbuttons {
+  height:17px;
+  margin:2px auto 1px;
+  padding:2px 16px 6px 42px;
+  width:557px;
+}
+.twitter {
+  float:left; width:120px;
+}
+.facebook {
+  float:left; width:140px;
+}
+.vkontakte {
+  float:left; width:160px;
+}
+.google {
+  float:left; width:80px;
 }
