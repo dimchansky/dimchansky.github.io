@@ -110,3 +110,24 @@ ins::before {
     font-weight: bold;
     content: ">> ";
 }
+
+div.social-share
+{
+    padding:6px 0 0 0;
+	border-top:1px solid #808080;
+	border-bottom: 1px solid #808080;
+}
+
+div.social-share ul
+{
+    margin:0;
+	padding:0
+}
+
+div.social-share ul li
+{
+    margin:0;
+	padding:0;
+	display:inline;
+	list-style-type:none
+}

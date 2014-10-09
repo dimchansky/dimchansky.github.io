@@ -39,9 +39,10 @@ runHakyll = hakyll $ do
     match "posts/*" $ do
         route wordpressRoute
         compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/post.html"    (tagsCtx tags)
-            >>= loadAndApplyTemplate "templates/disqus.html"  (tagsCtx tags)
-            >>= loadAndApplyTemplate "templates/default.html" (tagsCtx tags)
+            >>= loadAndApplyTemplate "templates/post.html"        (tagsCtx tags)
+			>>= loadAndApplyTemplate "templates/socialshare.html" (tagsCtx tags)
+            >>= loadAndApplyTemplate "templates/disqus.html"      (tagsCtx tags)
+            >>= loadAndApplyTemplate "templates/default.html"     (tagsCtx tags)
             >>= relativizeUrls
             >>= deIndexUrls
 
