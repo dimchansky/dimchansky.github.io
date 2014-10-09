@@ -19,7 +19,7 @@ p {
     -moz-hyphens: auto;
     -ms-hyphens: auto;
     hyphens: auto;
-    color: #333;
+    color: black;
 }
 
 pre {
@@ -57,8 +57,8 @@ menu {
 
 nav {
     text-align: center;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
+    border-top: 1px solid #808080;
+    border-bottom: 1px solid #808080;
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -94,7 +94,7 @@ article h2 {
 
 body>footer {
     text-align: center;
-    border-top: 1px solid black;
+    border-top: 1px solid #808080;
     margin-top: 10px;
 }
 
