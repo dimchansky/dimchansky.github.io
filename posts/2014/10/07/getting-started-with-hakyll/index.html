@@ -20,6 +20,15 @@
 		</script>		
     </head>
     <body>
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/ru_RU/sdk.js#xfbml=1&version=v2.0";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>	
+	
 		<header>
 			<hgroup>
 				<h1><a href="../../../../../">Непутёвые заметки Димчанского</a></h1>
@@ -206,6 +215,9 @@ $ cabal sandbox init --sandbox ../../.cabal-sandbox</code></pre>
   <li>
 	<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://dimchansky.github.io/posts/2014/10/07/getting-started-with-hakyll/" data-text="Создаем блог с помощью Hakyll" data-via="dimchansky" data-hashtags="hakyll, haskell, windows">Tweet</a>
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </li>
+  <li>
+    <div class="fb-like" data-href="http://dimchansky.github.io/posts/2014/10/07/getting-started-with-hakyll/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
   </li>
 </ul>
 </div>
