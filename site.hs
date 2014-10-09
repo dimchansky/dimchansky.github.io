@@ -32,7 +32,7 @@ runHakyll = hakyll $ do
     match (fromList ["about.rst", "contact.markdown"]) $ do
         route   $ setExtension "html"
         compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/default.html" defaultContext
+            >>= loadAndApplyTemplate "templates/default.html" siteCtx
             >>= relativizeUrls
             >>= deIndexUrls
 
@@ -84,10 +84,10 @@ runHakyll = hakyll $ do
                 >>= loadAndApplyTemplate "templates/posts.html"
                         (constField "title" title `mappend`
                          constField "body" list `mappend`
-                         defaultContext)
+                         siteCtx)
                 >>= loadAndApplyTemplate "templates/default.html"
                         (constField "title" title `mappend`
-                         defaultContext)
+                         siteCtx)
                 >>= relativizeUrls
 				>>= deIndexUrls
                 
@@ -101,12 +101,21 @@ runHakyll = hakyll $ do
             renderAtom myFeedConfiguration feedCtx posts
 			
 --------------------------------------------------------------------------------
+siteCtx :: Context String
+siteCtx =
+  deIndexedUrlField "url" `mappend`
+  constField "root" (siteRoot siteConf) `mappend`
+  constField "gaId" (siteGaId siteConf) `mappend`
+  constField "feedUrl" "/atom.xml" `mappend`
+  defaultContext
+
+--------------------------------------------------------------------------------
 postCtx :: Context String
 postCtx =
     deIndexedUrlField "url" `mappend`
     dateField "date" "%B %e, %Y" `mappend`
     dateField "datetime" "%Y-%m-%d" `mappend`
-    defaultContext
+    siteCtx
 
 --------------------------------------------------------------------------------
 tagsCtx :: Tags -> Context String
@@ -126,7 +135,7 @@ homeCtx tags list =
     constField "posts" list `mappend`
     constField "title" "Начало начал" `mappend`
     field "taglist" (\_ -> renderTagList tags) `mappend`
-    defaultContext
+    siteCtx
 
 --------------------------------------------------------------------------------
 postList :: Tags
@@ -159,7 +168,13 @@ wordpressRoute =
     where replaceWithSlash c = if c == '-' || c == '_'
                                    then '/'
                                    else c   
-								   
+
+--------------------------------------------------------------------------------
+data SiteConfiguration = SiteConfiguration
+    { siteRoot :: String
+    , siteGaId :: String
+    }
+
 --------------------------------------------------------------------------------    
 myFeedConfiguration :: FeedConfiguration
 myFeedConfiguration = FeedConfiguration
@@ -169,3 +184,11 @@ myFeedConfiguration = FeedConfiguration
     , feedAuthorEmail = "dimchansky@gmail.com"
     , feedRoot        = "http://dimchansky.github.io"
     }   
+
+--------------------------------------------------------------------------------    	
+siteConf :: SiteConfiguration
+siteConf = SiteConfiguration
+    { siteRoot = "http://dimchansky.github.io"
+    , siteGaId = "UA-41629923-3"
+    }	
+--------------------------------------------------------------------------------      
