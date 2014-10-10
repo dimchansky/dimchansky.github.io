@@ -14,6 +14,7 @@ h1, h2, h3, h4, h5, h6 {
     font-family: Verdana, Tahoma, sans-serif;
     font-style: normal;
     font-weight: normal;
+	color: #666;
 }
 
 p {
@@ -44,6 +45,7 @@ code, pre {
 }
 .header-container h1{
     font-size: 2.2em;
+	color: black;
 }
 
 .header-logo {
