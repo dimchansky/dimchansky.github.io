@@ -45,12 +45,12 @@ code, pre {
     line-height: 1.3em;
 }
 
-.wrapper {
+#wrapper  {
 	min-height: 100%;
 	position: relative;    
 }
 
-.header-container {
+#header {
     border-bottom: 1px solid #e5e5e5;
     background-color: #f5f5f5;
     display: table;
@@ -93,14 +93,14 @@ code, pre {
     text-align: right;
 }
 
-.content {
+#content {
     padding-top: 0;
     padding-left: 1em;
     padding-right: 1em;
     padding-bottom: 2em;   /* height of the footer element */
 }
 
-.footer {
+#footer {
     text-align: center;
     border-top: 1px solid #e5e5e5;    
 	width: 100%;
