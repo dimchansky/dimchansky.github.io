@@ -4,8 +4,10 @@ import           Control.Applicative
 import           Data.Functor ((<$>))
 import           Data.List (isSuffixOf)
 import           Data.Monoid (mappend)
+import qualified Data.Set as S
 import           Hakyll
 import           GHC.IO.Encoding
+import           Text.Pandoc.Options
 
 --------------------------------------------------------------------------------
 main :: IO ()
@@ -31,14 +33,14 @@ runHakyll = hakyll $ do
 
     match (fromList ["about.rst", "contact.markdown"]) $ do
         route   $ setExtension "html"
-        compile $ pandocCompiler
+        compile $ pandocMathCompiler
             >>= loadAndApplyTemplate "templates/default.html" siteCtx
             >>= relativizeUrls
             >>= deIndexUrls
 
     match "posts/*" $ do
         route wordpressRoute
-        compile $ pandocCompiler
+        compile $ pandocMathCompiler
             >>= loadAndApplyTemplate "templates/post.html"        (tagsCtx tags)
 			>>= loadAndApplyTemplate "templates/socialshare.html" (tagsCtx tags)
             >>= loadAndApplyTemplate "templates/disqus.html"      (tagsCtx tags)
@@ -100,6 +102,18 @@ runHakyll = hakyll $ do
             let feedCtx = postCtx `mappend` bodyField "description" 
             posts <- fmap (take 10) . recentFirst =<< loadAll "posts/*"
             renderAtom myFeedConfiguration feedCtx posts
+
+--------------------------------------------------------------------------------
+pandocMathCompiler =
+    let mathExtensions = [Ext_tex_math_dollars, Ext_tex_math_double_backslash,
+                          Ext_latex_macros]
+        defaultExtensions = writerExtensions defaultHakyllWriterOptions
+        newExtensions = foldr S.insert defaultExtensions mathExtensions
+        writerOptions = defaultHakyllWriterOptions {
+                          writerExtensions = newExtensions,
+                          writerHTMLMathMethod = MathJax ""
+                        }
+    in pandocCompilerWith defaultHakyllReaderOptions writerOptions
 			
 --------------------------------------------------------------------------------
 siteCtx :: Context String
