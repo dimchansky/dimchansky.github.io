@@ -51,6 +51,10 @@ p {
     color: black;    
 }
 
+pre {
+    padding: 5px;
+}
+
 code, pre {
     font-family: Menlo, Monaco, "DejaVu Sans Mono", Consolas, monospace;
     background-color: #f7f7f9;
