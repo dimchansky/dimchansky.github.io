@@ -23,7 +23,7 @@
     <id>http://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/</id>
     <published>2014-10-20T00:00:00Z</published>
     <updated>2014-10-20T00:00:00Z</updated>
-    <summary type="html"><![CDATA[Применения алгоритма HyperLogLog для приблизительного вычисления числа уникальных элементов в наборе данных]]></summary>
+    <summary type="html"><![CDATA[Применение алгоритма HyperLogLog для приблизительного вычисления числа уникальных элементов в наборе данных]]></summary>
 </entry>
 <entry>
     <title>Создаем блог с помощью Hakyll</title>
