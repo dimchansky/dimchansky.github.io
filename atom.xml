@@ -8,8 +8,16 @@
         <name>Dmitrij Koniajev</name>
         <email>dimchansky@gmail.com</email>
     </author>
-    <updated>2014-10-20T00:00:00Z</updated>
+    <updated>2014-10-26T00:00:00Z</updated>
     <entry>
+    <title>Имплементация HyperLogLog на C#</title>
+    <link href="http://dimchansky.github.io/posts/2014/10/26/hyperloglog-csharp-implementation/" />
+    <id>http://dimchansky.github.io/posts/2014/10/26/hyperloglog-csharp-implementation/</id>
+    <published>2014-10-26T00:00:00Z</published>
+    <updated>2014-10-26T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Имплементация алгоритма HyperLogLog для приблизительного вычисления числа уникальных элементов в наборе данных на C#]]></summary>
+</entry>
+<entry>
     <title>Оценка приблизительного числа уникальных элементов в наборе данных</title>
     <link href="http://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/" />
     <id>http://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/</id>
