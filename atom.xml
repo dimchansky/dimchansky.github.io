@@ -8,8 +8,16 @@
         <name>Dmitrij Koniajev</name>
         <email>dimchansky@gmail.com</email>
     </author>
-    <updated>2014-10-26T00:00:00Z</updated>
+    <updated>2014-11-05T00:00:00Z</updated>
     <entry>
+    <title>Примеры применения Haskell в реальной жизни</title>
+    <link href="http://dimchansky.github.io/posts/2014/11/05/haskell-real-life-use/" />
+    <id>http://dimchansky.github.io/posts/2014/11/05/haskell-real-life-use/</id>
+    <published>2014-11-05T00:00:00Z</published>
+    <updated>2014-11-05T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Примеры коммерческого использования, коммерческих сервисов, приложений на Haskell]]></summary>
+</entry>
+<entry>
     <title>Имплементация HyperLogLog на C#</title>
     <link href="http://dimchansky.github.io/posts/2014/10/26/hyperloglog-csharp-implementation/" />
     <id>http://dimchansky.github.io/posts/2014/10/26/hyperloglog-csharp-implementation/</id>

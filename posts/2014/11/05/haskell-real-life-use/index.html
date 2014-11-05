@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="author" content="Dmitrij Koniajev" />		
+        <title>Примеры применения Haskell в реальной жизни - Непутёвые заметки Димчанского</title>
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="../../../../../css/default.css" />
+		<link rel="stylesheet" type="text/css" href="../../../../../css/syntax.css" />
+		
+		<script type="text/javascript">
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-41629923-3', 'auto');
+		  ga('send', 'pageview');
+
+		</script>	
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+		<div id="wrapper">
+			<div id="header">
+				<div class="header-logo"><h1><a href="../../../../../">Непутёвые заметки Димчанского</a></h1></div>
+				<div class="header-links">
+					<a href="https://twitter.com/dimchansky"><i class="fa fa-twitter fa-fw fa-2x"></i></a>
+					<a href="https://github.com/dimchansky"><i class="fa fa-github fa-fw fa-2x"></i></a>
+					<a href="https://www.linkedin.com/in/dimchansky"><i class="fa fa-linkedin fa-fw fa-2x"></i></a>
+					<a href="https://www.youtube.com/user/Dimchansky"><i class="fa fa-youtube fa-fw fa-2x"></i></a>
+					<a href="../../../../../atom.xml"><i class="fa fa-rss fa-fw fa-2x"></i></a>
+				</div>
+			</div>	
+
+			<div id="content">
+				<article>
+<header>
+<h1>Примеры применения Haskell в реальной жизни</h1>
+
+<p>Дата: <strong>November  5, 2014</strong></p>
+<p>Метки: <a href="../../../../../tags/haskell.html">haskell</a></p>
+</header>
+
+<section>
+<p>Часто спрашивают: “A где-нибудь реально в жизни используют Haskell, кроме написания функции факториала?” Здесь небольшая подборка проектов, в которых используется Haskell. Источником ссылок является неплохая презентация “<a href="http://bob.ippoli.to/haskell-for-erlangers-2014/">Intro to Haskell for Erlangers</a>”.</p>
+<h3 id="коммерческое-применение-haskell">Коммерческое применение Haskell</h3>
+<ul>
+<li>Проект <a href="https://github.com/facebook/Haxl">Haxl</a> от <a href="https://skillsmatter.com/skillscasts/4429-simon-marlow">Facebook</a></li>
+<li><a href="http://cufp.galois.com/2008/abstracts.html#BalabanDavid">Amgen</a> - применение Haskell в биотехнологиях</li>
+<li>Количественное моделирование в инвестиционном банке <a href="http://cufp.galois.com/2006/abstracts.html#HowardMansell">Credit Suisse</a></li>
+<li>Создание eDSL для представления и процессинга экзотических вторичных ценных бумаг в <a href="http://lambda-the-ultimate.org/node/3331">Barclays</a></li>
+<li>Инфраструктура небольшой торговой группы в <a href="http://cufp.galois.com/2008/abstracts.html#PolakowJeff">Deutsche Bank</a></li>
+<li>Платформа для высокочастотных торгов в <a href="https://www.haskell.org/communities/05-2010/html/report.html#sect7.6">Tsuru Capital</a></li>
+<li>Генерация отчетов в <a href="https://www.youtube.com/watch?v=o3m2NkusI9k">McGraw-Hill Financial</a> с помощью собственного языка отчетов <a href="http://ermine-language.github.io/ermine/">ermine</a></li>
+<li>Высокоуровневый язык <a href="http://www.slideshare.net/mansu/bluespec-talk">Bluespec</a> для дизайна микросхем</li>
+</ul>
+<h3 id="приложения-написанные-на-haskell">Приложения написанные на Haskell</h3>
+<ul>
+<li><a href="https://www.silk.co/">Silk</a> - платформа для создания коллекций о чем угодно</li>
+<li><a href="http://chordify.net/">Chordify</a> - создание аккордов по музыкальным композициям для масс</li>
+<li><a href="https://bu.mp/">Bump</a> (куплен Google в 2013) - обмен файлами, фотографиями, контактами между телефоном и PC (прикрыли проект, <a href="http://web.archive.org/web/*/https://bu.mp/">архив сайта</a>)</li>
+<li><a href="http://www.mailrank.com/">MailRank</a> (куплен Facebook, ноябрь 2011) - приоритезация входящих сообщений (прикрыли проект, <a href="http://web.archive.org/web/*/http://www.mailrank.com/">архив сайта</a>)</li>
+<li><a href="https://bazqux.com/">Bazqux</a> - RSS читалка с комментариями</li>
+</ul>
+<h3 id="коммерческие-сервисы">Коммерческие сервисы</h3>
+<ul>
+<li><a href="http://janrain.com/">janrain</a> - управление профилями клиентов</li>
+<li><a href="http://spaceport.io/">Spaceport</a> (куплен Facebook, август 2013) - фреймворк для мобильных игр с использованием ActionScript 3, компилятор написан на Haskell</li>
+<li><a href="http://scrive.com/en/">scrive</a> - сервис для электронной подписи документов (скандинавский рынок)</li>
+<li><a href="http://www.openbrain.co.uk/">OpenBrain</a> - вычислительная платформа для научной и бизнес-аналитики</li>
+<li><a href="http://skedge.me/">skedge.me</a> - планирование встреч для бизнеса</li>
+</ul>
+<h3 id="автономные-приложения">Автономные приложения</h3>
+<ul>
+<li><a href="http://johnmacfarlane.net/pandoc/">Pandoc</a> - универсальная утилита (“швейцарский нож”) для работы с текстовыми форматами.</li>
+<li><a href="http://darcs.net/">Darcs</a> - распределённая система управления версиями (типа Git или Mercurial)</li>
+<li><a href="http://xmonad.org/">xmonad</a> - фреймовый оконный менеджер для X Window System</li>
+<li><a href="http://gitit.net/">Gitit</a> - Wiki с применением Git, Darcs или Mercurial для управления историей изменений</li>
+<li><a href="http://git-annex.branchable.com/">git-annex</a> Управление большими файлами с помощью git (похоже на Dropbox)</li>
+<li><a href="http://www.implicitcad.org/">ImplicitCAD</a> - аналог OpenScad, программное моделирование твердотельных трехмерных САПР-объектов</li>
+<li><a href="http://projects.haskell.org/diagrams/">Diagrams</a> - DSL для создания векторной графики с использованием Haskell</li>
+<li><a href="http://jaspervdj.be/hakyll/">Hakyll</a> - движок для генерации статических сайтов (использован при создании этого блога)</li>
+</ul>
+</section>
+</article>
+<div class="likebutton">
+	<div class="socbuttons">
+		<div class="twitter">
+			<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://dimchansky.github.io/posts/2014/11/05/haskell-real-life-use/" data-text="Примеры применения Haskell в реальной жизни" data-via="dimchansky" data-hashtags="haskell">Tweet</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+		</div>
+		<div class="facebook">
+			<iframe style="border: none; overflow: hidden; width: 135px; height: 20px;" src="http://www.facebook.com/plugins/like.php?href=http://dimchansky.github.io/posts/2014/11/05/haskell-real-life-use/&layout=button_count&show_faces=false&width=135&action=like&colorscheme=light&height=20" height="240" width="320" frameborder="0" scrolling="no"></iframe>
+		</div>
+		<div class="vkontakte"></div>
+		<div class="google">
+			<!-- Place this tag in your head or just before your close body tag. -->
+			<script src="https://apis.google.com/js/platform.js" async defer>
+			  {lang: 'ru'}
+			</script>
+
+			<!-- Place this tag where you want the +1 button to render. -->
+			<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="300"></div>		
+		</div>
+	</div>
+</div>
+<section>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'dimchansky'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>		
+</section>
+
+			</div>
+		
+			<div id="footer">
+				Site proudly generated by
+				<a href="http://jaspervdj.be/hakyll">Hakyll</a>
+			</div>		
+		</div>		
+    </body>
+</html>
