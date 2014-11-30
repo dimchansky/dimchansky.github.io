@@ -283,7 +283,7 @@ instance Monad Maybe where
         Just c -> b c
 ```
 
-Команда `class <sym> <vars> where <methods>`
+### Команда `class <sym> <vars> where <methods>`
 
 Никто не мешает определить свой класс типов и потом просить сгенерировать для этого класса типов реализацию.
 
