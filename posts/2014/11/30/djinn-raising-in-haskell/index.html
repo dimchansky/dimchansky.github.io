@@ -157,7 +157,7 @@ Djinn&gt; ?instance Monad (C r)</code></pre>
         <span class="kw">case</span> a <span class="kw">of</span>
         <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
         <span class="dt">Just</span> c <span class="ot">-&gt;</span> b c</code></pre>
-<p>Команда <code>class &lt;sym&gt; &lt;vars&gt; where &lt;methods&gt;</code></p>
+<h3 id="команда-class-sym-vars-where-methods">Команда <code>class &lt;sym&gt; &lt;vars&gt; where &lt;methods&gt;</code></h3>
 <p>Никто не мешает определить свой класс типов и потом просить сгенерировать для этого класса типов реализацию.</p>
 <pre><code>Djinn&gt; class Functor f where fmap :: (a -&gt; b) -&gt; f a -&gt; f b; (&lt;$) :: a -&gt; f b -&gt; f a
 Djinn&gt; ?instance Functor Maybe</code></pre>
