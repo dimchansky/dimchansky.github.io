@@ -8,8 +8,16 @@
         <name>Dmitrij Koniajev</name>
         <email>dimchansky@gmail.com</email>
     </author>
-    <updated>2014-11-30T00:00:00Z</updated>
+    <updated>2014-12-31T00:00:00Z</updated>
     <entry>
+    <title>В гостях у KTU</title>
+    <link href="http://dimchansky.github.io/posts/2014/12/31/real-life-applications-of-mathematics/" />
+    <id>http://dimchansky.github.io/posts/2014/12/31/real-life-applications-of-mathematics/</id>
+    <published>2014-12-31T00:00:00Z</published>
+    <updated>2014-12-31T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Расширенный доклад "Real life applications of mathematics" в Каунасском технологическом университете (KTU)]]></summary>
+</entry>
+<entry>
     <title>Магия Haskell - вызываем джина</title>
     <link href="http://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/" />
     <id>http://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/</id>
