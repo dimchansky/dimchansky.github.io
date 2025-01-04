@@ -1,0 +1,14 @@
+.git
+.gitignore
+.idea
+Dockerfile
+docker-compose.yml
+*.cabal.sandbox.config
+/dist-newstyle
+/.stack
+/node_modules
+_site
+_cache
+dist
+.cabal-sandbox
+cabal.sandbox.config

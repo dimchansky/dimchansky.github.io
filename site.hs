@@ -1,20 +1,68 @@
---------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
+
 import           Control.Applicative
 import           Data.Functor ((<$>))
 import           Data.List (isSuffixOf)
 import           Data.Monoid (mappend)
 import qualified Data.Set as S
-import           Hakyll
+
+import           Hakyll ( hakyll
+                      , match
+                      , route
+                      , compile
+                      , copyFileCompiler
+                      , compressCssCompiler
+                      , fromList
+                      , setExtension
+                      , loadAndApplyTemplate
+                      , relativizeUrls
+                      , buildTags
+                      , tagsRules
+                      , constField
+                      , bodyField
+                      , renderAtom
+                      , loadAll
+                      , recentFirst
+                      , loadBody
+                      , applyTemplateList
+                      , makeItem
+                      , dateField
+                      , field
+                      , withUrls
+                      , templateCompiler
+                      , renderTagList
+                      , gsubRoute
+                      , composeRoutes
+                      , FeedConfiguration(..)
+                      , Context
+                      , Tags
+                      , Pattern
+                      , Item
+                      , Compiler
+                      , Routes
+                      , fromCapture
+                      , idRoute
+                      , create
+                      , tagsField
+                      , defaultHakyllWriterOptions
+                      , pandocCompilerWith
+                      , defaultHakyllReaderOptions
+                      , defaultContext
+                      , toUrl
+                      , getRoute
+                      , itemIdentifier
+                      )
+
 import           GHC.IO.Encoding
-import           Text.Pandoc.Options
+import           Text.Pandoc.Options (WriterOptions(..), Extension(..), HTMLMathMethod(..))
+import           Text.Pandoc.Extensions (enableExtension)
 
 --------------------------------------------------------------------------------
 main :: IO ()
 main = do
     setLocaleEncoding utf8
     setFileSystemEncoding utf8
-    setForeignEncoding utf8    
+    setForeignEncoding utf8
     runHakyll
 
 runHakyll :: IO ()
@@ -42,7 +90,7 @@ runHakyll = hakyll $ do
         route wordpressRoute
         compile $ pandocMathCompiler
             >>= loadAndApplyTemplate "templates/post.html"        (tagsCtx tags)
-			>>= loadAndApplyTemplate "templates/socialshare.html" (tagsCtx tags)
+            >>= loadAndApplyTemplate "templates/socialshare.html" (tagsCtx tags)
             >>= loadAndApplyTemplate "templates/disqus.html"      (tagsCtx tags)
             >>= loadAndApplyTemplate "templates/default.html"     (tagsCtx tags)
             >>= relativizeUrls
@@ -61,7 +109,7 @@ runHakyll = hakyll $ do
                 >>= loadAndApplyTemplate "templates/default.html" allPostsCtx
                 >>= relativizeUrls
                 >>= deIndexUrls
-    
+
     -- Index
     create ["index.html"] $ do
         route idRoute
@@ -75,8 +123,8 @@ runHakyll = hakyll $ do
                 >>= loadAndApplyTemplate "templates/default.html" (homeCtx tags list)
                 >>= relativizeUrls
                 >>= deIndexUrls
-                
-                
+
+
     -- Post tags
     tagsRules tags $ \tag pattern -> do
         let title = "Заметки помеченные “" ++ tag ++ "”"
@@ -92,29 +140,30 @@ runHakyll = hakyll $ do
                         (constField "title" title `mappend`
                          siteCtx)
                 >>= relativizeUrls
-				>>= deIndexUrls
-                
+                >>= deIndexUrls
+
     match "templates/*" $ compile templateCompiler
 
     create ["atom.xml"] $ do
         route idRoute
         compile $ do
-            let feedCtx = postCtx `mappend` bodyField "description" 
+            let feedCtx = postCtx `mappend` bodyField "description"
             posts <- fmap (take 10) . recentFirst =<< loadAll "posts/*"
             renderAtom myFeedConfiguration feedCtx posts
 
 --------------------------------------------------------------------------------
+pandocMathCompiler :: Compiler (Item String)
 pandocMathCompiler =
     let mathExtensions = [Ext_tex_math_dollars, Ext_tex_math_double_backslash,
                           Ext_latex_macros]
-        defaultExtensions = writerExtensions defaultHakyllWriterOptions
-        newExtensions = foldr S.insert defaultExtensions mathExtensions
+        -- Add math extensions to the existing writer extensions
+        newExtensions = foldr enableExtension (writerExtensions defaultHakyllWriterOptions) mathExtensions
         writerOptions = defaultHakyllWriterOptions {
                           writerExtensions = newExtensions,
                           writerHTMLMathMethod = MathJax ""
                         }
     in pandocCompilerWith defaultHakyllReaderOptions writerOptions
-			
+
 --------------------------------------------------------------------------------
 siteCtx :: Context String
 siteCtx =
@@ -136,15 +185,15 @@ postCtx =
 tagsCtx :: Tags -> Context String
 tagsCtx tags =
     tagsField "prettytags" tags `mappend`
-    postCtx 
+    postCtx
 
---------------------------------------------------------------------------------    
+--------------------------------------------------------------------------------
 allPostsCtx :: Context String
 allPostsCtx =
     constField "title" "Все заметки" `mappend`
-    postCtx 
+    postCtx
 
---------------------------------------------------------------------------------    
+--------------------------------------------------------------------------------
 homeCtx :: Tags -> String -> Context String
 homeCtx tags list =
     constField "posts" list `mappend`
@@ -161,20 +210,29 @@ postList tags pattern preprocess' = do
     postItemTpl <- loadBody "templates/postitem.html"
     posts <- loadAll pattern
     processed <- preprocess' posts
-    applyTemplateList postItemTpl (tagsCtx tags) processed  
+    applyTemplateList postItemTpl (tagsCtx tags) processed
 
 --------------------------------------------------------------------------------
 stripIndex :: String -> String
-stripIndex url = if "index.html" `isSuffixOf` url && elem (head url) "/."
-  then take (length url - 10) url else url
+stripIndex url =
+    if "index.html" `isSuffixOf` url && startsWithSlashOrDot url
+    then take (length url - 10) url
+    else url
+  where
+    startsWithSlashOrDot :: String -> Bool
+    startsWithSlashOrDot (c:_) = c == '/' || c == '.'
+    startsWithSlashOrDot []    = False
 
+--------------------------------------------------------------------------------
 deIndexUrls :: Item String -> Compiler (Item String)
-deIndexUrls item = return $ fmap (withUrls stripIndex) item  
-  
+deIndexUrls item = return $ fmap (withUrls stripIndex) item
+
+--------------------------------------------------------------------------------
 deIndexedUrlField :: String -> Context a
 deIndexedUrlField key = field key
-  $ fmap (stripIndex . maybe empty toUrl) . getRoute . itemIdentifier	
-	
+  $ fmap (stripIndex . maybe empty toUrl) . getRoute . itemIdentifier
+
+
 --------------------------------------------------------------------------------
 wordpressRoute :: Routes
 wordpressRoute =
@@ -182,7 +240,7 @@ wordpressRoute =
     gsubRoute ".markdown$" (const "/index.html")
     where replaceWithSlash c = if c == '-' || c == '_'
                                    then '/'
-                                   else c   
+                                   else c
 
 --------------------------------------------------------------------------------
 data SiteConfiguration = SiteConfiguration
@@ -190,20 +248,20 @@ data SiteConfiguration = SiteConfiguration
     , siteGaId :: String
     }
 
---------------------------------------------------------------------------------    
+--------------------------------------------------------------------------------
 myFeedConfiguration :: FeedConfiguration
 myFeedConfiguration = FeedConfiguration
     { feedTitle       = "Непутёвые заметки Димчанского"
     , feedDescription = "Множество непутёвых заметок Димчанского"
     , feedAuthorName  = "Dmitrij Koniajev"
     , feedAuthorEmail = "dimchansky@gmail.com"
-    , feedRoot        = "http://dimchansky.github.io"
-    }   
+    , feedRoot        = "https://dimchansky.github.io"
+    }
 
---------------------------------------------------------------------------------    	
+--------------------------------------------------------------------------------
 siteConf :: SiteConfiguration
 siteConf = SiteConfiguration
-    { siteRoot = "http://dimchansky.github.io"
+    { siteRoot = "https://dimchansky.github.io"
     , siteGaId = "UA-41629923-3"
     }	
 --------------------------------------------------------------------------------      
