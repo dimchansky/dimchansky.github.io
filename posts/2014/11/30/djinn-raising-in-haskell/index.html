@@ -18,7 +18,7 @@
 		  ga('send', 'pageview');
 
 		</script>	
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     </head>
     <body>
 		<div id="wrapper">
@@ -39,146 +39,173 @@
 <h1>Магия Haskell - вызываем джина</h1>
 
 <p>Дата: <strong>November 30, 2014</strong></p>
-<p>Метки: <a href="../../../../../tags/haskell.html">haskell</a>, <a href="../../../../../tags/djinn.html">djinn</a>, <a href="../../../../../tags/windows.html">windows</a></p>
+<p>Метки: <a title="All pages tagged 'haskell'." href="../../../../../tags/haskell.html" rel="tag">haskell</a>, <a title="All pages tagged 'djinn'." href="../../../../../tags/djinn.html" rel="tag">djinn</a>, <a title="All pages tagged 'windows'." href="../../../../../tags/windows.html" rel="tag">windows</a></p>
 </header>
 
 <section>
-<p>В мире Haskell есть много интересных пакетов, программ, которых не встретишь в мире ООП ввиду их функциональной направленности. Примером одной из таких программ является <a href="https://hackage.haskell.org/package/djinn">djinn</a>, которую создал Lennart Augustsson (<a href="https://github.com/augustss/djinn">исходный код</a>). То, что она делает, похоже на уличную магию и, видимо, производит наибольший вау-эффект на тех, кто недавно вошел в мир функционального программирования. Программа по заданному типу функции пытается сгенерировать код этой функции, если это вообще возможно. Лучше наверное сказать, что она, исходя из типов входных параметров, пытается найти такую трансформацию, которая бы в итоге возвращала значение нужного типа. Лучше всего это объяснить на примерах.</p>
+<p>В мире Haskell есть много интересных пакетов, программ, которых не встретишь в мире ООП ввиду их функциональной направленности.
+Примером одной из таких программ является <a href="https://hackage.haskell.org/package/djinn">djinn</a>, которую создал Lennart Augustsson
+(<a href="https://github.com/augustss/djinn">исходный код</a>). То, что она делает, похоже на уличную магию и, видимо, производит наибольший
+вау-эффект на тех, кто недавно вошел в мир функционального программирования. Программа по заданному типу функции пытается сгенерировать
+код этой функции, если это вообще возможно. Лучше наверное сказать, что она, исходя из типов входных параметров, пытается найти
+такую трансформацию, которая бы в итоге возвращала значение нужного типа. Лучше всего это объяснить на примерах.</p>
 <h2 id="как-вызывать-джина-без-лампы">Как вызывать джина без лампы?</h2>
-<p>Для начала установим <a href="https://hackage.haskell.org/package/djinn">djinn</a>. Актуальной версией на момент написания является 2014.9.7. Проблем с установкой под Windows быть не должно (обычно, если какая-либо программа на Haskell не собирается, то, как правило, не собирается именно под Windows, это если авторы использовали что-то из мира Linux, а именно <a href="https://cdsmith.wordpress.com/2007/07/06/why-dont-haskell-developers-use-windows/">в том мире в большинстве случаев обитают хаскеллисты</a>).</p>
+<p>Для начала установим <a href="https://hackage.haskell.org/package/djinn">djinn</a>. Актуальной версией на момент написания является 2014.9.7.
+Проблем с установкой под Windows быть не должно (обычно, если какая-либо программа на Haskell не собирается, то, как правило, не
+собирается именно под Windows, это если авторы использовали что-то из мира Linux, а именно <a href="https://cdsmith.wordpress.com/2007/07/06/why-dont-haskell-developers-use-windows/">в том мире в большинстве случаев
+обитают хаскеллисты</a>).</p>
 <p>Обновляем список пакетов и устанавливаем djinn:</p>
 <pre><code>&gt; cabal update
 &gt; cabal install djinn</code></pre>
-<p>Все пакеты под Windows устанавливаются в <code>%APPDATA%\cabal</code>, устанавливаемые исполняемые файлы оказываются в каталоге <code>%APPDATA%\cabal\bin</code>, поэтому лучше всего добавить этот каталог в <code>%PATH%</code>, если этого еще не сделали. Все кто против системы или просто лентяи могут призвать джина путем запуска:</p>
+<p>Все пакеты под Windows устанавливаются в <code>%APPDATA%\cabal</code>, устанавливаемые исполняемые файлы оказываются в каталоге <code>%APPDATA%\cabal\bin</code>,
+поэтому лучше всего добавить этот каталог в <code>%PATH%</code>, если этого еще не сделали. Все кто против системы или просто лентяи могут призвать
+джина путем запуска:</p>
 <pre><code>&gt; %APPDATA%\cabal\bin\djinn.exe</code></pre>
 <h2 id="загадываем-желания">Загадываем желания</h2>
 <p>Теперь, когда джин вызван, можно загадывать желания. Рассмотрим команды, которые он умеет выполнять.</p>
 <h3 id="команда-sym-type">Команда <code>&lt;sym&gt; ? &lt;type&gt;</code></h3>
-<p>Эта команда используется чтобы сгенерировать функцию с именем <code>&lt;sym&gt;</code> по ее типу <code>&lt;type&gt;</code>. Djinn знает о типах функций, о кортежах, о Either, Maybe, (), можно также объявить и передать синонимы типов, тип данных. Вот список синонимов типов, типов данных и классов типов определенных в окружении djinn сразу после запуска (позже можно определить свои):</p>
+<p>Эта команда используется чтобы сгенерировать функцию с именем <code>&lt;sym&gt;</code> по ее типу <code>&lt;type&gt;</code>. Djinn знает о типах функций,
+о кортежах, о Either, Maybe, (), можно также объявить и передать синонимы типов, тип данных. Вот список синонимов типов,
+типов данных и классов типов определенных в окружении djinn сразу после запуска (позже можно определить свои):</p>
 <pre><code>Djinn&gt; :e</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> () <span class="fu">=</span> ()
-<span class="kw">data</span> <span class="dt">Either</span> a b <span class="fu">=</span> <span class="dt">Left</span> a <span class="fu">|</span> <span class="dt">Right</span> b
-<span class="kw">data</span> <span class="dt">Maybe</span> a <span class="fu">=</span> <span class="dt">Nothing</span> <span class="fu">|</span> <span class="dt">Just</span> a
-<span class="kw">data</span> <span class="dt">Bool</span> <span class="fu">=</span> <span class="dt">False</span> <span class="fu">|</span> <span class="dt">True</span>
-<span class="kw">data</span> <span class="dt">Void</span>
-<span class="kw">type</span> <span class="dt">Not</span> x <span class="fu">=</span> x <span class="ot">-&gt;</span> <span class="dt">Void</span>
-<span class="kw">class</span> <span class="dt">Monad</span> m <span class="kw">where</span><span class="ot"> return ::</span> a <span class="ot">-&gt;</span> m a;<span class="ot"> (&gt;&gt;=) ::</span> m a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> m b
-<span class="kw">class</span> <span class="dt">Eq</span> a <span class="kw">where</span><span class="ot"> (==) ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Bool</span></code></pre>
-<p>Если функция может быть найдена, она будет выведена в виде кода на Haskell. Например, сгенерируем функцию, которая принимает параметр типа <code class="sourceCode haskell">a</code> и возвращает результат того же типа <code class="sourceCode haskell">a</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> () <span class="ot">=</span> ()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Either</span> a b <span class="ot">=</span> <span class="dt">Left</span> a <span class="op">|</span> <span class="dt">Right</span> b</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Maybe</span> a <span class="ot">=</span> <span class="dt">Nothing</span> <span class="op">|</span> <span class="dt">Just</span> a</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Bool</span> <span class="ot">=</span> <span class="dt">False</span> <span class="op">|</span> <span class="dt">True</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Void</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Not</span> x <span class="ot">=</span> x <span class="ot">-&gt;</span> <span class="dt">Void</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">Monad</span> m <span class="kw">where</span><span class="ot"> return ::</span> a <span class="ot">-&gt;</span> m a;<span class="ot"> (&gt;&gt;=) ::</span> m a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> m b</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">Eq</span> a <span class="kw">where</span><span class="ot"> (==) ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Bool</span></span></code></pre></div>
+<p>Если функция может быть найдена, она будет выведена в виде кода на Haskell. Например, сгенерируем функцию, которая
+принимает параметр типа <code class="sourceCode haskell">a</code> и возвращает результат того же типа <code class="sourceCode haskell">a</code>:</p>
 <pre><code>Djinn&gt; f ? a-&gt;a</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">f ::</span> a <span class="ot">-&gt;</span> a
-f a <span class="fu">=</span> a</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">f ::</span> a <span class="ot">-&gt;</span> a</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>f a <span class="ot">=</span> a</span></code></pre></div>
 <p>Это было просто. Пример чуть сложнее, где из внутренних кортежей выберем элементы нужных нам типов.</p>
 <pre><code>Djinn&gt; sel ? ((a,b),(c,d)) -&gt; (b,c)</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">sel ::</span> ((a, b), (c, d)) <span class="ot">-&gt;</span> (b, c)
-sel ((_, a), (b, _)) <span class="fu">=</span> (a, b)</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ot">sel ::</span> ((a, b), (c, d)) <span class="ot">-&gt;</span> (b, c)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>sel ((_, a), (b, _)) <span class="ot">=</span> (a, b)</span></code></pre></div>
 <p>А слабо из типа <code class="sourceCode haskell">a</code> вывести тип <code class="sourceCode haskell">b</code>?</p>
 <pre><code>Djinn&gt; convert ? a-&gt;b
 -- convert cannot be realized.</code></pre>
 <p>“Ага-aa!!!” — укоризненно сказали суровые сибирские лесорубы.</p>
 <p>Стоит также отметить, что если может быть несколько имплементаций, то будет выведена только одна из них. Например,</p>
 <pre><code>Djinn&gt; f ? a-&gt;a-&gt;a</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">f ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a
-f _ a <span class="fu">=</span> a</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ot">f ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>f _ a <span class="ot">=</span> a</span></code></pre></div>
 <p>Однако, можно включить вывод нескольких решений командой:</p>
 <pre><code>Djinn&gt; :s +multi</code></pre>
 <p>Тогда результат команды</p>
 <pre><code>Djinn&gt; f ? a-&gt;a-&gt;a</code></pre>
 <p>будет таким</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">f ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a
-f _ a <span class="fu">=</span> a
-<span class="co">-- or</span>
-f a _ <span class="fu">=</span> a</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ot">f ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>f _ a <span class="ot">=</span> a</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- or</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>f a _ <span class="ot">=</span> a</span></code></pre></div>
 <h3 id="команда-type-sym-vars-type">Команда <code>type &lt;sym&gt; &lt;vars&gt; = &lt;type&gt;</code></h3>
-<p>Для того, чтобы добавить в окружение синоним типа можно использовать эту команду. Синонимы типов раскрываются до того, как djinn начинает поиск реализации функции.</p>
+<p>Для того, чтобы добавить в окружение синоним типа можно использовать эту команду. Синонимы типов раскрываются до того, как djinn начинает
+поиск реализации функции.</p>
 <p>Простой пример:</p>
 <pre><code>Djinn&gt; type Id a = a-&gt;a
 Djinn&gt; f ? Id a</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">f ::</span> <span class="dt">Id</span> a
-f a <span class="fu">=</span> a</code></pre>
-<p>Пример посложнее. Попробуем найти реализацию функций <code>return</code>, <code>bind</code> и <code>callCC</code> для <a href="https://www.haskell.org/haskellwiki/All_About_Monads#The_Continuation_monad">монады продолжения</a>. Несколько описаний на английском этой монады есть в <a href="http://www.haskellforall.com/2012/12/the-continuation-monad.html">блоге Gabriel Gonzalez</a>, <a href="http://en.wikibooks.org/wiki/Haskell/Continuation_passing_style#The_Cont_monad">Wikibooks</a>, <a href="http://stackoverflow.com/questions/3322540/tutorial-to-disassemble-the-haskell-cont-monad">Stackoverflow</a> <a href="https://www.fpcomplete.com/user/jwiegley/understanding-continuations">FPComplete</a>, на русском можно почитать на <a href="http://habrahabr.ru/post/127040/">habrahabr</a>, <a href="http://habrahabr.ru/post/149174/">еще habrahabr</a>, <a href="http://rsdn.ru/forum/decl/810346.1">rsdn</a>.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ot">f ::</span> <span class="dt">Id</span> a</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>f a <span class="ot">=</span> a</span></code></pre></div>
+<p>Пример посложнее. Попробуем найти реализацию функций <code>return</code>, <code>bind</code> и <code>callCC</code> для <a href="https://www.haskell.org/haskellwiki/All_About_Monads#The_Continuation_monad">монады продолжения</a>.
+Несколько описаний на английском этой монады есть в
+<a href="http://www.haskellforall.com/2012/12/the-continuation-monad.html">блоге Gabriel Gonzalez</a>,
+<a href="http://en.wikibooks.org/wiki/Haskell/Continuation_passing_style#The_Cont_monad">Wikibooks</a>,
+<a href="http://stackoverflow.com/questions/3322540/tutorial-to-disassemble-the-haskell-cont-monad">Stackoverflow</a>
+<a href="https://www.fpcomplete.com/user/jwiegley/understanding-continuations">FPComplete</a>,
+на русском можно почитать на
+<a href="http://habrahabr.ru/post/127040/">habrahabr</a>,
+<a href="http://habrahabr.ru/post/149174/">еще habrahabr</a>,
+<a href="http://rsdn.ru/forum/decl/810346.1">rsdn</a>.</p>
 <pre><code>Djinn&gt; type C r a = (a -&gt; r) -&gt; r
 Djinn&gt; returnC ? a -&gt; C r a</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">returnC ::</span> a <span class="ot">-&gt;</span> <span class="dt">C</span> r a
-returnC a b <span class="fu">=</span> b a</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ot">returnC ::</span> a <span class="ot">-&gt;</span> <span class="dt">C</span> r a</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>returnC a b <span class="ot">=</span> b a</span></code></pre></div>
 <pre><code>Djinn&gt; bindC ? C r a -&gt; (a -&gt; C r b) -&gt; C r b</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">bindC ::</span> <span class="dt">C</span> r a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">C</span> r b) <span class="ot">-&gt;</span> <span class="dt">C</span> r b
-bindC a b c <span class="fu">=</span> a (\ d <span class="ot">-&gt;</span> b d c)</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ot">bindC ::</span> <span class="dt">C</span> r a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">C</span> r b) <span class="ot">-&gt;</span> <span class="dt">C</span> r b</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>bindC a b c <span class="ot">=</span> a (\ d <span class="ot">-&gt;</span> b d c)</span></code></pre></div>
 <pre><code>Djinn&gt; callCC ? ((a -&gt; C r b) -&gt; C r a) -&gt; C r a</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">callCC ::</span> ((a <span class="ot">-&gt;</span> <span class="dt">C</span> r b) <span class="ot">-&gt;</span> <span class="dt">C</span> r a) <span class="ot">-&gt;</span> <span class="dt">C</span> r a
-callCC a b <span class="fu">=</span> a (\ c _ <span class="ot">-&gt;</span> b c) b</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ot">callCC ::</span> ((a <span class="ot">-&gt;</span> <span class="dt">C</span> r b) <span class="ot">-&gt;</span> <span class="dt">C</span> r a) <span class="ot">-&gt;</span> <span class="dt">C</span> r a</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>callCC a b <span class="ot">=</span> a (\ c _ <span class="ot">-&gt;</span> b c) b</span></code></pre></div>
 <h3 id="команда-data-sym-vars-type">Команда <code>data &lt;sym&gt; &lt;vars&gt; = &lt;type&gt;</code></h3>
 <p>Эта команда добавляет в окружение новый тип данных.</p>
 <pre><code>Djinn&gt; data Foo a = C a a a
 Djinn&gt; f ? a -&gt; Foo a</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">f ::</span> a <span class="ot">-&gt;</span> <span class="dt">Foo</span> a
-f a <span class="fu">=</span> <span class="dt">C</span> a a a</code></pre>
-<p>Стоит заметить, что djinn не позволяет определять рекурсивных типов. Т.е. если вы попытаетесь определить числа Пеано, djinn вас разочарует:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ot">f ::</span> a <span class="ot">-&gt;</span> <span class="dt">Foo</span> a</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>f a <span class="ot">=</span> <span class="dt">C</span> a a a</span></code></pre></div>
+<p>Стоит заметить, что djinn не позволяет определять рекурсивных типов. Т.е. если вы попытаетесь определить числа Пеано,
+djinn вас разочарует:</p>
 <pre><code>Djinn&gt; data Peano = Zero | Succ Peano</code></pre>
 <pre><code>Error: Recursive types are not allowed: Peano</code></pre>
-<p>Хотя djinn и позволяет определять пустые типы командой <code>data &lt;sym&gt; &lt;vars&gt;</code> (тип данных без конструкторов), но все они интерпретируются как одинаковые (из-за хака использованного при определении типов данных в djinn).</p>
+<p>Хотя djinn и позволяет определять пустые типы командой <code>data &lt;sym&gt; &lt;vars&gt;</code> (тип данных без конструкторов), но все они
+интерпретируются как одинаковые (из-за хака использованного при определении типов данных в djinn).</p>
 <p>Можно теперь завернуть монаду продолжения в наш тип данных и посмотреть на результат генерации функций <code>return</code>, <code>bind</code> и <code>callCC</code>:</p>
 <pre><code>Djinn&gt; data C r a = C ((a -&gt; r) -&gt; r)
 Djinn&gt; returnC ? a -&gt; C r a</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">returnC ::</span> a <span class="ot">-&gt;</span> <span class="dt">C</span> r a
-returnC a <span class="fu">=</span> <span class="dt">C</span> (\ b <span class="ot">-&gt;</span> b a)</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ot">returnC ::</span> a <span class="ot">-&gt;</span> <span class="dt">C</span> r a</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>returnC a <span class="ot">=</span> <span class="dt">C</span> (\ b <span class="ot">-&gt;</span> b a)</span></code></pre></div>
 <pre><code>Djinn&gt; bindC ? C r a -&gt; (a -&gt; C r b) -&gt; C r b</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">bindC ::</span> <span class="dt">C</span> r a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">C</span> r b) <span class="ot">-&gt;</span> <span class="dt">C</span> r b
-bindC a b <span class="fu">=</span>
-        <span class="kw">case</span> a <span class="kw">of</span>
-        <span class="dt">C</span> c <span class="ot">-&gt;</span> <span class="dt">C</span> (\ d <span class="ot">-&gt;</span>
-                  c (\ e <span class="ot">-&gt;</span>
-                     <span class="kw">case</span> b e <span class="kw">of</span>
-                     <span class="dt">C</span> f <span class="ot">-&gt;</span> f d))</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ot">bindC ::</span> <span class="dt">C</span> r a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">C</span> r b) <span class="ot">-&gt;</span> <span class="dt">C</span> r b</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>bindC a b <span class="ot">=</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">case</span> a <span class="kw">of</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">C</span> c <span class="ot">-&gt;</span> <span class="dt">C</span> (\ d <span class="ot">-&gt;</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>                  c (\ e <span class="ot">-&gt;</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                     <span class="kw">case</span> b e <span class="kw">of</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                     <span class="dt">C</span> f <span class="ot">-&gt;</span> f d))</span></code></pre></div>
 <pre><code>Djinn&gt; callCC ? ((a -&gt; C r b) -&gt; C r a) -&gt; C r a</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">callCC ::</span> ((a <span class="ot">-&gt;</span> <span class="dt">C</span> r b) <span class="ot">-&gt;</span> <span class="dt">C</span> r a) <span class="ot">-&gt;</span> <span class="dt">C</span> r a
-callCC a <span class="fu">=</span>
-         <span class="dt">C</span> (\ b <span class="ot">-&gt;</span>
-            <span class="kw">case</span> a (\ c <span class="ot">-&gt;</span> <span class="dt">C</span> (\ _ <span class="ot">-&gt;</span> b c)) <span class="kw">of</span>
-            <span class="dt">C</span> d <span class="ot">-&gt;</span> d b)</code></pre>
-<p>Получилось не так красиво, как с синонимом типов, но дальше можно уже допилить напильником трансформируя <code>case</code> в патттерн матчинг на уровне параметров функции, например.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="ot">callCC ::</span> ((a <span class="ot">-&gt;</span> <span class="dt">C</span> r b) <span class="ot">-&gt;</span> <span class="dt">C</span> r a) <span class="ot">-&gt;</span> <span class="dt">C</span> r a</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>callCC a <span class="ot">=</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>         <span class="dt">C</span> (\ b <span class="ot">-&gt;</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>            <span class="kw">case</span> a (\ c <span class="ot">-&gt;</span> <span class="dt">C</span> (\ _ <span class="ot">-&gt;</span> b c)) <span class="kw">of</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>            <span class="dt">C</span> d <span class="ot">-&gt;</span> d b)</span></code></pre></div>
+<p>Получилось не так красиво, как с синонимом типов, но дальше можно уже допилить напильником трансформируя <code>case</code> в патттерн матчинг
+на уровне параметров функции, например.</p>
 <h3 id="команда-instance-sym-types">Команда <code>?instance &lt;sym&gt; &lt;types&gt;</code></h3>
-<p>Для того, чтобы не просить сгенерировать отдельно функции <code>bind</code> и <code>return</code>, можно попросить сразу сгенерировать инстанс класса типов <code>Monad</code>. Пример монады продолжения:</p>
+<p>Для того, чтобы не просить сгенерировать отдельно функции <code>bind</code> и <code>return</code>, можно попросить сразу сгенерировать инстанс класса типов <code>Monad</code>.
+Пример монады продолжения:</p>
 <pre><code>Djinn&gt; data C r a = C ((a -&gt; r) -&gt; r)
 Djinn&gt; ?instance Monad (C r)</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Monad</span> (<span class="dt">C</span> r) <span class="kw">where</span>
-   return a <span class="fu">=</span> <span class="dt">C</span> (\ b <span class="ot">-&gt;</span> b a)
-   (<span class="fu">&gt;&gt;=</span>) a b <span class="fu">=</span>
-        <span class="kw">case</span> a <span class="kw">of</span>
-        <span class="dt">C</span> c <span class="ot">-&gt;</span> <span class="dt">C</span> (\ d <span class="ot">-&gt;</span>
-                  c (\ e <span class="ot">-&gt;</span>
-                     <span class="kw">case</span> b e <span class="kw">of</span>
-                     <span class="dt">C</span> f <span class="ot">-&gt;</span> f d))</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Monad</span> (<span class="dt">C</span> r) <span class="kw">where</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span> a <span class="ot">=</span> <span class="dt">C</span> (\ b <span class="ot">-&gt;</span> b a)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>   (<span class="op">&gt;&gt;=</span>) a b <span class="ot">=</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">case</span> a <span class="kw">of</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">C</span> c <span class="ot">-&gt;</span> <span class="dt">C</span> (\ d <span class="ot">-&gt;</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>                  c (\ e <span class="ot">-&gt;</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>                     <span class="kw">case</span> b e <span class="kw">of</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>                     <span class="dt">C</span> f <span class="ot">-&gt;</span> f d))</span></code></pre></div>
 <p>Пример монады Maybe:</p>
 <pre><code>Djinn&gt; ?instance Monad Maybe</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Monad</span> <span class="dt">Maybe</span> <span class="kw">where</span>
-   return <span class="fu">=</span> <span class="dt">Just</span>
-   (<span class="fu">&gt;&gt;=</span>) a b <span class="fu">=</span>
-        <span class="kw">case</span> a <span class="kw">of</span>
-        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
-        <span class="dt">Just</span> c <span class="ot">-&gt;</span> b c</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Monad</span> <span class="dt">Maybe</span> <span class="kw">where</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span> <span class="ot">=</span> <span class="dt">Just</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>   (<span class="op">&gt;&gt;=</span>) a b <span class="ot">=</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">case</span> a <span class="kw">of</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Just</span> c <span class="ot">-&gt;</span> b c</span></code></pre></div>
 <h3 id="команда-class-sym-vars-where-methods">Команда <code>class &lt;sym&gt; &lt;vars&gt; where &lt;methods&gt;</code></h3>
 <p>Никто не мешает определить свой класс типов и потом просить сгенерировать для этого класса типов реализацию.</p>
 <pre><code>Djinn&gt; class Functor f where fmap :: (a -&gt; b) -&gt; f a -&gt; f b; (&lt;$) :: a -&gt; f b -&gt; f a
 Djinn&gt; ?instance Functor Maybe</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">Maybe</span> <span class="kw">where</span>
-   fmap a b <span class="fu">=</span>
-       <span class="kw">case</span> b <span class="kw">of</span>
-       <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
-       <span class="dt">Just</span> c <span class="ot">-&gt;</span> <span class="dt">Just</span> (a c)
-   (<span class="fu">&lt;$</span>) a b <span class="fu">=</span>
-       <span class="kw">case</span> b <span class="kw">of</span>
-       <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span>
-       <span class="dt">Just</span> _ <span class="ot">-&gt;</span> <span class="dt">Just</span> a</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">Maybe</span> <span class="kw">where</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">fmap</span> a b <span class="ot">=</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>       <span class="kw">case</span> b <span class="kw">of</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>       <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>       <span class="dt">Just</span> c <span class="ot">-&gt;</span> <span class="dt">Just</span> (a c)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>   (<span class="op">&lt;$</span>) a b <span class="ot">=</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>       <span class="kw">case</span> b <span class="kw">of</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>       <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>       <span class="dt">Just</span> _ <span class="ot">-&gt;</span> <span class="dt">Just</span> a</span></code></pre></div>
 <pre><code>Djinn&gt; data C r a = C ((a -&gt; r) -&gt; r)
 Djinn&gt; ?instance Functor (C r)</code></pre>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> (<span class="dt">C</span> r) <span class="kw">where</span>
-   fmap a b <span class="fu">=</span>
-       <span class="kw">case</span> b <span class="kw">of</span>
-       <span class="dt">C</span> c <span class="ot">-&gt;</span> <span class="dt">C</span> (\ d <span class="ot">-&gt;</span> c (\ e <span class="ot">-&gt;</span> d (a e)))
-   (<span class="fu">&lt;$</span>) a b <span class="fu">=</span>
-       <span class="kw">case</span> b <span class="kw">of</span>
-       <span class="dt">C</span> c <span class="ot">-&gt;</span> <span class="dt">C</span> (\ d <span class="ot">-&gt;</span> c (\ _ <span class="ot">-&gt;</span> d a))</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Functor</span> (<span class="dt">C</span> r) <span class="kw">where</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">fmap</span> a b <span class="ot">=</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>       <span class="kw">case</span> b <span class="kw">of</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>       <span class="dt">C</span> c <span class="ot">-&gt;</span> <span class="dt">C</span> (\ d <span class="ot">-&gt;</span> c (\ e <span class="ot">-&gt;</span> d (a e)))</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>   (<span class="op">&lt;$</span>) a b <span class="ot">=</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>       <span class="kw">case</span> b <span class="kw">of</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>       <span class="dt">C</span> c <span class="ot">-&gt;</span> <span class="dt">C</span> (\ d <span class="ot">-&gt;</span> c (\ _ <span class="ot">-&gt;</span> d a))</span></code></pre></div>
 <p>Этих команд джину должно хватить, чтобы почувствовать себя магом в Haskell. Не упомянул я только команд</p>
 <pre><code>:clear                             Очистить окружение
 :delete &lt;sym&gt;                      Удалить определенный символ из окружения
@@ -186,7 +213,8 @@ Djinn&gt; ?instance Functor (C r)</code></pre>
 :load &lt;file&gt;                       Загрузить файл с командами
 :quit                              Выйти из программы
 :set &lt;option&gt;                      Установить опции джина</code></pre>
-<p>Можно использовать первые буквы команд. Опции по-умолчанию:</p>
+<p>Можно использовать первые буквы команд.
+Опции по-умолчанию:</p>
 <pre><code>    -multi     Вывод нескольких решений
     +sorted    Сортировка решений
     -debug     Отладочный режим
@@ -197,11 +225,11 @@ Djinn&gt; ?instance Functor (C r)</code></pre>
 <div class="likebutton">
 	<div class="socbuttons">
 		<div class="twitter">
-			<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/" data-text="Магия Haskell - вызываем джина" data-via="dimchansky" data-hashtags="haskell, djinn, windows">Tweet</a>
+			<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/" data-text="Магия Haskell - вызываем джина" data-via="dimchansky" data-hashtags="haskell, djinn, windows">Tweet</a>
 			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 		</div>
 		<div class="facebook">
-			<iframe style="border: none; overflow: hidden; width: 135px; height: 20px;" src="http://www.facebook.com/plugins/like.php?href=http://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/&layout=button_count&show_faces=false&width=135&action=like&colorscheme=light&height=20" height="240" width="320" frameborder="0" scrolling="no"></iframe>
+			<iframe style="border: none; overflow: hidden; width: 135px; height: 20px;" src="http://www.facebook.com/plugins/like.php?href=https://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/&layout=button_count&show_faces=false&width=135&action=like&colorscheme=light&height=20" height="240" width="320" frameborder="0" scrolling="no"></iframe>
 		</div>
 		<div class="vkontakte"></div>
 		<div class="google">

@@ -18,7 +18,7 @@
 		  ga('send', 'pageview');
 
 		</script>	
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     </head>
     <body>
 		<div id="wrapper">
@@ -39,596 +39,693 @@
 <h1>Оценка приблизительного числа уникальных элементов в наборе данных</h1>
 
 <p>Дата: <strong>October 20, 2014</strong></p>
-<p>Метки: <a href="../../../../../tags/cardinality-estimation.html">cardinality-estimation</a>, <a href="../../../../../tags/big-data.html">big-data</a>, <a href="../../../../../tags/LogLog.html">LogLog</a>, <a href="../../../../../tags/SuperLogLog.html">SuperLogLog</a>, <a href="../../../../../tags/HyperLogLog.html">HyperLogLog</a></p>
+<p>Метки: <a title="All pages tagged 'cardinality-estimation'." href="../../../../../tags/cardinality-estimation.html" rel="tag">cardinality-estimation</a>, <a title="All pages tagged 'big-data'." href="../../../../../tags/big-data.html" rel="tag">big-data</a>, <a title="All pages tagged 'LogLog'." href="../../../../../tags/LogLog.html" rel="tag">LogLog</a>, <a title="All pages tagged 'SuperLogLog'." href="../../../../../tags/SuperLogLog.html" rel="tag">SuperLogLog</a>, <a title="All pages tagged 'HyperLogLog'." href="../../../../../tags/HyperLogLog.html" rel="tag">HyperLogLog</a></p>
 </header>
 
 <section>
-<p>Предположим, что у нас имеется очень большой набор данных с дубликатами, который не помещается в оперативную память. Нам необходимо подсчитать число уникальных элементов в этом наборе. Можно было бы, конечно, отсортировать данные на диске и подсчитать точно, но мы этого делать не хотим, нам бы хотелось подсчитать это хотя бы приблизительно за один проход. В таком случае мы сможем даже на живом потоке данных в режиме реального времени вычислять число полученных уникальных элементов, например, число уникальных IP адресов.</p>
+<p>Предположим, что у нас имеется очень большой набор данных с дубликатами, который не помещается в оперативную память.
+Нам необходимо подсчитать число уникальных элементов в этом наборе. Можно было бы, конечно, отсортировать данные на диске и подсчитать точно,
+но мы этого делать не хотим, нам бы хотелось подсчитать это хотя бы приблизительно за один проход. В таком случае мы сможем даже на живом потоке
+данных в режиме реального времени вычислять число полученных уникальных элементов, например, число уникальных IP адресов.</p>
 <h2 id="простой-интуитивный-подход">Простой интуитивный подход</h2>
-<p>Для начала упростим нашу задачу и предположим, что наши данные - это равномерно распределенные в заранее известном интервале целые числа. Попробуем сгенерировать несколько наборов данных с одинаковым числом уникальных случайных чисел в каждом наборе. Пусть в каждом наборе будет 7 уникальных случайных чисел равномерно распределенных в интервале [0, 65535] (16 бит), сгенерируем 20 таких наборов:</p>
+<p>Для начала упростим нашу задачу и предположим, что наши данные - это равномерно распределенные в заранее известном интервале целые числа. Попробуем
+сгенерировать несколько наборов данных с одинаковым числом уникальных случайных чисел в каждом наборе. Пусть в каждом наборе будет 7 уникальных
+случайных чисел равномерно распределенных в интервале [0, 65535] (16 бит), сгенерируем 20 таких наборов:</p>
 <table>
 <thead>
 <tr class="header">
-<th align="center"></th>
-<th align="right">1</th>
-<th align="right">2</th>
-<th align="right">3</th>
-<th align="right">4</th>
-<th align="right">5</th>
-<th align="right">6</th>
-<th align="right">7</th>
+<th style="text-align: center;"></th>
+<th style="text-align: right;">1</th>
+<th style="text-align: right;">2</th>
+<th style="text-align: right;">3</th>
+<th style="text-align: right;">4</th>
+<th style="text-align: right;">5</th>
+<th style="text-align: right;">6</th>
+<th style="text-align: right;">7</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center"><strong>1</strong></td>
-<td align="right">13502</td>
-<td align="right">36579</td>
-<td align="right">36627</td>
-<td align="right">47595</td>
-<td align="right">50333</td>
-<td align="right">53564</td>
-<td align="right">59377</td>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: right;">13502</td>
+<td style="text-align: right;">36579</td>
+<td style="text-align: right;">36627</td>
+<td style="text-align: right;">47595</td>
+<td style="text-align: right;">50333</td>
+<td style="text-align: right;">53564</td>
+<td style="text-align: right;">59377</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>2</strong></td>
-<td align="right">17937</td>
-<td align="right">19130</td>
-<td align="right">28978</td>
-<td align="right">30625</td>
-<td align="right">30769</td>
-<td align="right">41461</td>
-<td align="right">64064</td>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: right;">17937</td>
+<td style="text-align: right;">19130</td>
+<td style="text-align: right;">28978</td>
+<td style="text-align: right;">30625</td>
+<td style="text-align: right;">30769</td>
+<td style="text-align: right;">41461</td>
+<td style="text-align: right;">64064</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>3</strong></td>
-<td align="right">1990</td>
-<td align="right">20617</td>
-<td align="right">44379</td>
-<td align="right">53536</td>
-<td align="right">56516</td>
-<td align="right">64366</td>
-<td align="right">65231</td>
+<td style="text-align: center;"><strong>3</strong></td>
+<td style="text-align: right;">1990</td>
+<td style="text-align: right;">20617</td>
+<td style="text-align: right;">44379</td>
+<td style="text-align: right;">53536</td>
+<td style="text-align: right;">56516</td>
+<td style="text-align: right;">64366</td>
+<td style="text-align: right;">65231</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>4</strong></td>
-<td align="right">2138</td>
-<td align="right">34490</td>
-<td align="right">45063</td>
-<td align="right">45871</td>
-<td align="right">55577</td>
-<td align="right">61211</td>
-<td align="right">65005</td>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: right;">2138</td>
+<td style="text-align: right;">34490</td>
+<td style="text-align: right;">45063</td>
+<td style="text-align: right;">45871</td>
+<td style="text-align: right;">55577</td>
+<td style="text-align: right;">61211</td>
+<td style="text-align: right;">65005</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>5</strong></td>
-<td align="right">5315</td>
-<td align="right">12263</td>
-<td align="right">19475</td>
-<td align="right">29709</td>
-<td align="right">35836</td>
-<td align="right">42119</td>
-<td align="right">64785</td>
+<td style="text-align: center;"><strong>5</strong></td>
+<td style="text-align: right;">5315</td>
+<td style="text-align: right;">12263</td>
+<td style="text-align: right;">19475</td>
+<td style="text-align: right;">29709</td>
+<td style="text-align: right;">35836</td>
+<td style="text-align: right;">42119</td>
+<td style="text-align: right;">64785</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>6</strong></td>
-<td align="right">1991</td>
-<td align="right">22488</td>
-<td align="right">24969</td>
-<td align="right">33104</td>
-<td align="right">46921</td>
-<td align="right">50001</td>
-<td align="right">62747</td>
+<td style="text-align: center;"><strong>6</strong></td>
+<td style="text-align: right;">1991</td>
+<td style="text-align: right;">22488</td>
+<td style="text-align: right;">24969</td>
+<td style="text-align: right;">33104</td>
+<td style="text-align: right;">46921</td>
+<td style="text-align: right;">50001</td>
+<td style="text-align: right;">62747</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>7</strong></td>
-<td align="right">7796</td>
-<td align="right">9622</td>
-<td align="right">17920</td>
-<td align="right">22096</td>
-<td align="right">29963</td>
-<td align="right">52085</td>
-<td align="right">59447</td>
+<td style="text-align: center;"><strong>7</strong></td>
+<td style="text-align: right;">7796</td>
+<td style="text-align: right;">9622</td>
+<td style="text-align: right;">17920</td>
+<td style="text-align: right;">22096</td>
+<td style="text-align: right;">29963</td>
+<td style="text-align: right;">52085</td>
+<td style="text-align: right;">59447</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>8</strong></td>
-<td align="right">12773</td>
-<td align="right">14504</td>
-<td align="right">26874</td>
-<td align="right">31979</td>
-<td align="right">40621</td>
-<td align="right">47102</td>
-<td align="right">57553</td>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: right;">12773</td>
+<td style="text-align: right;">14504</td>
+<td style="text-align: right;">26874</td>
+<td style="text-align: right;">31979</td>
+<td style="text-align: right;">40621</td>
+<td style="text-align: right;">47102</td>
+<td style="text-align: right;">57553</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>9</strong></td>
-<td align="right">14313</td>
-<td align="right">40951</td>
-<td align="right">44548</td>
-<td align="right">48195</td>
-<td align="right">54094</td>
-<td align="right">56244</td>
-<td align="right">58678</td>
+<td style="text-align: center;"><strong>9</strong></td>
+<td style="text-align: right;">14313</td>
+<td style="text-align: right;">40951</td>
+<td style="text-align: right;">44548</td>
+<td style="text-align: right;">48195</td>
+<td style="text-align: right;">54094</td>
+<td style="text-align: right;">56244</td>
+<td style="text-align: right;">58678</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>10</strong></td>
-<td align="right">5674</td>
-<td align="right">11150</td>
-<td align="right">14364</td>
-<td align="right">42212</td>
-<td align="right">54186</td>
-<td align="right">54957</td>
-<td align="right">58749</td>
+<td style="text-align: center;"><strong>10</strong></td>
+<td style="text-align: right;">5674</td>
+<td style="text-align: right;">11150</td>
+<td style="text-align: right;">14364</td>
+<td style="text-align: right;">42212</td>
+<td style="text-align: right;">54186</td>
+<td style="text-align: right;">54957</td>
+<td style="text-align: right;">58749</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>11</strong></td>
-<td align="right">6614</td>
-<td align="right">31546</td>
-<td align="right">42742</td>
-<td align="right">47167</td>
-<td align="right">47781</td>
-<td align="right">53048</td>
-<td align="right">65534</td>
+<td style="text-align: center;"><strong>11</strong></td>
+<td style="text-align: right;">6614</td>
+<td style="text-align: right;">31546</td>
+<td style="text-align: right;">42742</td>
+<td style="text-align: right;">47167</td>
+<td style="text-align: right;">47781</td>
+<td style="text-align: right;">53048</td>
+<td style="text-align: right;">65534</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>12</strong></td>
-<td align="right">8226</td>
-<td align="right">12394</td>
-<td align="right">21332</td>
-<td align="right">31248</td>
-<td align="right">35441</td>
-<td align="right">47084</td>
-<td align="right">59321</td>
+<td style="text-align: center;"><strong>12</strong></td>
+<td style="text-align: right;">8226</td>
+<td style="text-align: right;">12394</td>
+<td style="text-align: right;">21332</td>
+<td style="text-align: right;">31248</td>
+<td style="text-align: right;">35441</td>
+<td style="text-align: right;">47084</td>
+<td style="text-align: right;">59321</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>13</strong></td>
-<td align="right">30696</td>
-<td align="right">43977</td>
-<td align="right">50102</td>
-<td align="right">52011</td>
-<td align="right">53031</td>
-<td align="right">54624</td>
-<td align="right">61442</td>
+<td style="text-align: center;"><strong>13</strong></td>
+<td style="text-align: right;">30696</td>
+<td style="text-align: right;">43977</td>
+<td style="text-align: right;">50102</td>
+<td style="text-align: right;">52011</td>
+<td style="text-align: right;">53031</td>
+<td style="text-align: right;">54624</td>
+<td style="text-align: right;">61442</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>14</strong></td>
-<td align="right">14582</td>
-<td align="right">18790</td>
-<td align="right">19332</td>
-<td align="right">21796</td>
-<td align="right">34261</td>
-<td align="right">43476</td>
-<td align="right">53779</td>
+<td style="text-align: center;"><strong>14</strong></td>
+<td style="text-align: right;">14582</td>
+<td style="text-align: right;">18790</td>
+<td style="text-align: right;">19332</td>
+<td style="text-align: right;">21796</td>
+<td style="text-align: right;">34261</td>
+<td style="text-align: right;">43476</td>
+<td style="text-align: right;">53779</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>15</strong></td>
-<td align="right">4490</td>
-<td align="right">12246</td>
-<td align="right">14505</td>
-<td align="right">40935</td>
-<td align="right">41313</td>
-<td align="right">45419</td>
-<td align="right">60793</td>
+<td style="text-align: center;"><strong>15</strong></td>
+<td style="text-align: right;">4490</td>
+<td style="text-align: right;">12246</td>
+<td style="text-align: right;">14505</td>
+<td style="text-align: right;">40935</td>
+<td style="text-align: right;">41313</td>
+<td style="text-align: right;">45419</td>
+<td style="text-align: right;">60793</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>16</strong></td>
-<td align="right">4359</td>
-<td align="right">6158</td>
-<td align="right">7010</td>
-<td align="right">9771</td>
-<td align="right">44466</td>
-<td align="right">58989</td>
-<td align="right">60863</td>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: right;">4359</td>
+<td style="text-align: right;">6158</td>
+<td style="text-align: right;">7010</td>
+<td style="text-align: right;">9771</td>
+<td style="text-align: right;">44466</td>
+<td style="text-align: right;">58989</td>
+<td style="text-align: right;">60863</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>17</strong></td>
-<td align="right">9703</td>
-<td align="right">14772</td>
-<td align="right">32153</td>
-<td align="right">37346</td>
-<td align="right">39968</td>
-<td align="right">44407</td>
-<td align="right">62458</td>
+<td style="text-align: center;"><strong>17</strong></td>
+<td style="text-align: right;">9703</td>
+<td style="text-align: right;">14772</td>
+<td style="text-align: right;">32153</td>
+<td style="text-align: right;">37346</td>
+<td style="text-align: right;">39968</td>
+<td style="text-align: right;">44407</td>
+<td style="text-align: right;">62458</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>18</strong></td>
-<td align="right">333</td>
-<td align="right">4083</td>
-<td align="right">18458</td>
-<td align="right">23654</td>
-<td align="right">40513</td>
-<td align="right">46201</td>
-<td align="right">55737</td>
+<td style="text-align: center;"><strong>18</strong></td>
+<td style="text-align: right;">333</td>
+<td style="text-align: right;">4083</td>
+<td style="text-align: right;">18458</td>
+<td style="text-align: right;">23654</td>
+<td style="text-align: right;">40513</td>
+<td style="text-align: right;">46201</td>
+<td style="text-align: right;">55737</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>19</strong></td>
-<td align="right">18371</td>
-<td align="right">25371</td>
-<td align="right">33198</td>
-<td align="right">34258</td>
-<td align="right">34837</td>
-<td align="right">62821</td>
-<td align="right">64802</td>
+<td style="text-align: center;"><strong>19</strong></td>
+<td style="text-align: right;">18371</td>
+<td style="text-align: right;">25371</td>
+<td style="text-align: right;">33198</td>
+<td style="text-align: right;">34258</td>
+<td style="text-align: right;">34837</td>
+<td style="text-align: right;">62821</td>
+<td style="text-align: right;">64802</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>20</strong></td>
-<td align="right">3736</td>
-<td align="right">6826</td>
-<td align="right">18386</td>
-<td align="right">32511</td>
-<td align="right">40183</td>
-<td align="right">48649</td>
-<td align="right">55470</td>
+<td style="text-align: center;"><strong>20</strong></td>
+<td style="text-align: right;">3736</td>
+<td style="text-align: right;">6826</td>
+<td style="text-align: right;">18386</td>
+<td style="text-align: right;">32511</td>
+<td style="text-align: right;">40183</td>
+<td style="text-align: right;">48649</td>
+<td style="text-align: right;">55470</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>avg</strong></td>
-<td align="right">9226.95</td>
-<td align="right">19897.85</td>
-<td align="right">28020.75</td>
-<td align="right">35780.95</td>
-<td align="right">43330.50</td>
-<td align="right">51391.40</td>
-<td align="right">60791.75</td>
+<td style="text-align: center;"><strong>avg</strong></td>
+<td style="text-align: right;">9226.95</td>
+<td style="text-align: right;">19897.85</td>
+<td style="text-align: right;">28020.75</td>
+<td style="text-align: right;">35780.95</td>
+<td style="text-align: right;">43330.50</td>
+<td style="text-align: right;">51391.40</td>
+<td style="text-align: right;">60791.75</td>
 </tr>
 </tbody>
 </table>
-<p>В последней строке мы вычислили среднее значение в каждом столбике. Посмотрим на поведение чисел в каждом столбике. От набора к набору числа в отдельно взятом столбце менялись довольно сильно, но их среднее в конце-концов сходится ко вполне конкретному числу. Средние значения по столбцу имеют тенденцию с одинаковым расстоянием друг от друга заполнять весь интервал [0, 65535]. Как несложно заметить, среднее значение в первом столбце равно примерно шагу разбиения интервала [0, 65535] на равные части. Таким образом, если бы кто-то сгенерировал похожую таблицу и сказал бы нам среднее значение первого столбца, то мы бы могли оценить число уникальных элементов, которое было в каждом наборе. Для этого мы бы просто длину интервала (65535) поделили бы на шаг разбиения (среднее значение первого столбца равное 9226.95) и отняли единицу (потому что если колбасу разрезать на две равных части, разрез будет один, а не два). В нашем случае получается оценка в \( \frac { 65535 }{ 9226.95 } - 1 = 6.01 \) уникальных элементов в каждой выборке. Понятно, что чем больше выборок, тем точнее будет оценка.</p>
-<p>Можно так же сказать иначе, что среднее значение первого столбца есть ни что иное как среднее значение минимальных элементов из каждой выборки. Т.е. мы просто берем минимальные элементы из каждой выборки и находим их среднее. Таким образом нам не нужно даже запоминать все элементы каждой выборки, чтобы оценить число уникальных элементов, достаточно где-то хранить минимальные значения каждой из выборок.</p>
+<p>В последней строке мы вычислили среднее значение в каждом столбике. Посмотрим на поведение чисел в каждом столбике.
+От набора к набору числа в отдельно взятом столбце менялись довольно сильно, но их среднее в конце-концов сходится ко вполне конкретному числу.
+Средние значения по столбцу имеют тенденцию с одинаковым расстоянием друг от друга заполнять весь интервал [0, 65535].
+Как несложно заметить, среднее значение в первом столбце равно примерно шагу разбиения интервала [0, 65535] на равные части. Таким образом,
+если бы кто-то сгенерировал похожую таблицу и сказал бы нам среднее значение первого столбца, то мы бы могли оценить число уникальных
+элементов, которое было в каждом наборе. Для этого мы бы просто длину интервала (65535) поделили бы на шаг разбиения (среднее
+значение первого столбца равное 9226.95) и отняли единицу (потому что если колбасу разрезать на две равных части,
+разрез будет один, а не два). В нашем случае получается оценка в \( \frac { 65535 }{ 9226.95 } - 1 = 6.01 \) уникальных
+элементов в каждой выборке. Понятно, что чем больше выборок, тем точнее будет оценка.</p>
+<p>Можно так же сказать иначе, что среднее значение первого столбца есть ни что иное как среднее значение минимальных элементов из каждой выборки. Т.е. мы
+просто берем минимальные элементы из каждой выборки и находим их среднее. Таким образом нам не нужно даже запоминать все элементы каждой выборки, чтобы оценить число
+уникальных элементов, достаточно где-то хранить минимальные значения каждой из выборок.</p>
 <h2 id="бит-паттерны">Бит-паттерны</h2>
 <p>Представим наши случайные данные в виде двоичных чисел. Чем меньше число, тем больше в его двоичном представлении старших битов установлено в ноль:</p>
 <table>
 <thead>
 <tr class="header">
-<th align="center">десятичное представление</th>
-<th align="center">двоичное представление</th>
+<th style="text-align: center;">десятичное представление</th>
+<th style="text-align: center;">двоичное представление</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">0</td>
-<td align="center"><strong>000</strong></td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;"><strong>000</strong></td>
 </tr>
 <tr class="even">
-<td align="center">1</td>
-<td align="center"><strong>00</strong>1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>00</strong>1</td>
 </tr>
 <tr class="odd">
-<td align="center">2</td>
-<td align="center"><strong>0</strong>10</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>0</strong>10</td>
 </tr>
 <tr class="even">
-<td align="center">3</td>
-<td align="center"><strong>0</strong>11</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>0</strong>11</td>
 </tr>
 <tr class="odd">
-<td align="center">4</td>
-<td align="center">100</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">100</td>
 </tr>
 <tr class="even">
-<td align="center">5</td>
-<td align="center">101</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">101</td>
 </tr>
 <tr class="odd">
-<td align="center">6</td>
-<td align="center">110</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">110</td>
 </tr>
 <tr class="even">
-<td align="center">7</td>
-<td align="center">111</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">111</td>
 </tr>
 </tbody>
 </table>
-<p>Поэтому, вместо того, чтобы определять минимальное число в выборке можно определять в выборке максимальное число старших битов установленных в ноль. Если мы случайным образом генерируем число из n бит, то вероятность того, что k старших битов будет установлено в ноль, равна:</p>
-<p><span class="math">\[ \underbrace { \frac { 1 }{ 2 } \times \cdots \times \frac { 1 }{ 2 }  }_{ k } =\frac { 1 }{ { 2 }^{ k } } \]</span></p>
-<p>Т.е. в среднем каждые \( { 2 }^{ k } \) раз старшие k битов будут установлены в ноль. Это позволяет нам грубо с точностью до степени двойки определять число уникальных элементов в выборке.</p>
-<p>Преобразуем таблицу со случайными выборками так, чтобы она содержала число старших битов установленных в ноль для каждого случайного числа и для каждой выборки определим максимальное число старших битов установленных в ноль:</p>
-<table>
+<p>Поэтому, вместо того, чтобы определять минимальное число в выборке можно определять в выборке максимальное число старших битов установленных в ноль.
+Если мы случайным образом генерируем число из n бит, то вероятность того, что k старших битов будет установлено в ноль, равна:</p>
+<p><span class="math display">\[ \underbrace { \frac { 1 }{ 2 } \times \cdots \times \frac { 1 }{ 2 }  }_{ k } =\frac { 1 }{ { 2 }^{ k } } \]</span></p>
+<p>Т.е. в среднем каждые \( { 2 }^{ k } \) раз старшие k битов будут установлены в ноль. Это позволяет нам грубо с точностью до степени двойки
+определять число уникальных элементов в выборке.</p>
+<p>Преобразуем таблицу со случайными выборками так, чтобы она содержала число старших битов установленных в ноль для каждого случайного числа
+и для каждой выборки определим максимальное число старших битов установленных в ноль:</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 24%" />
+</colgroup>
 <thead>
 <tr class="header">
-<th align="center"></th>
-<th align="right">1</th>
-<th align="right">2</th>
-<th align="right">3</th>
-<th align="right">4</th>
-<th align="right">5</th>
-<th align="right">6</th>
-<th align="right">7</th>
-<th align="center">макс. число старших битов установленных в ноль</th>
+<th style="text-align: center;"></th>
+<th style="text-align: right;">1</th>
+<th style="text-align: right;">2</th>
+<th style="text-align: right;">3</th>
+<th style="text-align: right;">4</th>
+<th style="text-align: right;">5</th>
+<th style="text-align: right;">6</th>
+<th style="text-align: right;">7</th>
+<th style="text-align: center;">макс. число старших битов установленных в ноль</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center"><strong>1</strong></td>
-<td align="right">(13502 = b<strong>00</strong>11010010111110) 2</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">2</td>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: right;">(13502 = b<strong>00</strong>11010010111110) 2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">2</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>2</strong></td>
-<td align="right">(17937 = b<strong>0</strong>100011000010001) 1</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">1</td>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: right;">(17937 = b<strong>0</strong>100011000010001) 1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">1</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>3</strong></td>
-<td align="right">(1990 = b<strong>00000</strong>11111000110) 5</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">5</td>
+<td style="text-align: center;"><strong>3</strong></td>
+<td style="text-align: right;">(1990 = b<strong>00000</strong>11111000110) 5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">5</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>4</strong></td>
-<td align="right">(2138 = b<strong>0000</strong>100001011010) 4</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">4</td>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: right;">(2138 = b<strong>0000</strong>100001011010) 4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">4</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>5</strong></td>
-<td align="right">(5315 = b<strong>000</strong>1010011000011) 3</td>
-<td align="right">2</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">3</td>
+<td style="text-align: center;"><strong>5</strong></td>
+<td style="text-align: right;">(5315 = b<strong>000</strong>1010011000011) 3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">3</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>6</strong></td>
-<td align="right">(1991 = b<strong>00000</strong>11111000111) 5</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">5</td>
+<td style="text-align: center;"><strong>6</strong></td>
+<td style="text-align: right;">(1991 = b<strong>00000</strong>11111000111) 5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">5</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>7</strong></td>
-<td align="right">(7796 = b<strong>000</strong>1111001110100) 3</td>
-<td align="right">2</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">3</td>
+<td style="text-align: center;"><strong>7</strong></td>
+<td style="text-align: right;">(7796 = b<strong>000</strong>1111001110100) 3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">3</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>8</strong></td>
-<td align="right">(12773 = b<strong>00</strong>11000111100101) 2</td>
-<td align="right">2</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">2</td>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: right;">(12773 = b<strong>00</strong>11000111100101) 2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">2</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>9</strong></td>
-<td align="right">(14313 = b<strong>00</strong>11011111101001) 2</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">2</td>
+<td style="text-align: center;"><strong>9</strong></td>
+<td style="text-align: right;">(14313 = b<strong>00</strong>11011111101001) 2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">2</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>10</strong></td>
-<td align="right">(5674 = b<strong>000</strong>1011000101010) 3</td>
-<td align="right">2</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">3</td>
+<td style="text-align: center;"><strong>10</strong></td>
+<td style="text-align: right;">(5674 = b<strong>000</strong>1011000101010) 3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">3</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>11</strong></td>
-<td align="right">(6614 = b<strong>000</strong>1100111010110) 3</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">3</td>
+<td style="text-align: center;"><strong>11</strong></td>
+<td style="text-align: right;">(6614 = b<strong>000</strong>1100111010110) 3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">3</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>12</strong></td>
-<td align="right">(8226 = b<strong>00</strong>10000000100010) 2</td>
-<td align="right">2</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">2</td>
+<td style="text-align: center;"><strong>12</strong></td>
+<td style="text-align: right;">(8226 = b<strong>00</strong>10000000100010) 2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">2</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>13</strong></td>
-<td align="right">(30696 = b<strong>0</strong>111011111101000) 1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">1</td>
+<td style="text-align: center;"><strong>13</strong></td>
+<td style="text-align: right;">(30696 = b<strong>0</strong>111011111101000) 1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">1</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>14</strong></td>
-<td align="right">(14582 = b<strong>00</strong>11100011110110) 2</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">2</td>
+<td style="text-align: center;"><strong>14</strong></td>
+<td style="text-align: right;">(14582 = b<strong>00</strong>11100011110110) 2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">2</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>15</strong></td>
-<td align="right">(4490 = b<strong>000</strong>1000110001010) 3</td>
-<td align="right">2</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">3</td>
+<td style="text-align: center;"><strong>15</strong></td>
+<td style="text-align: right;">(4490 = b<strong>000</strong>1000110001010) 3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">3</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>16</strong></td>
-<td align="right">(4359 = b<strong>000</strong>1000100000111) 3</td>
-<td align="right">3</td>
-<td align="right">3</td>
-<td align="right">2</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">3</td>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: right;">(4359 = b<strong>000</strong>1000100000111) 3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">3</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>17</strong></td>
-<td align="right">(9703 = b<strong>00</strong>10010111100111) 2</td>
-<td align="right">2</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">2</td>
+<td style="text-align: center;"><strong>17</strong></td>
+<td style="text-align: right;">(9703 = b<strong>00</strong>10010111100111) 2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">2</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>18</strong></td>
-<td align="right">(333 = b<strong>0000000</strong>101001101) 7</td>
-<td align="right">4</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">7</td>
+<td style="text-align: center;"><strong>18</strong></td>
+<td style="text-align: right;">(333 = b<strong>0000000</strong>101001101) 7</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">7</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>19</strong></td>
-<td align="right">(18371 = b<strong>0</strong>100011111000011) 1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">1</td>
+<td style="text-align: center;"><strong>19</strong></td>
+<td style="text-align: right;">(18371 = b<strong>0</strong>100011111000011) 1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">1</td>
 </tr>
 <tr class="even">
-<td align="center"><strong>20</strong></td>
-<td align="right">(3736 = b<strong>0000</strong>111010011000) 4</td>
-<td align="right">3</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="center">4</td>
+<td style="text-align: center;"><strong>20</strong></td>
+<td style="text-align: right;">(3736 = b<strong>0000</strong>111010011000) 4</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: center;">4</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>avg</strong></td>
-<td align="right"></td>
-<td align="right"></td>
-<td align="right"></td>
-<td align="right"></td>
-<td align="right"></td>
-<td align="right"></td>
-<td align="right"></td>
-<td align="center">2.9</td>
+<td style="text-align: center;"><strong>avg</strong></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: center;">2.9</td>
 </tr>
 </tbody>
 </table>
 <p>В среднем 2.9 битов установлено в ноль, что позволяет грубо определить количество уникальных элементов в каждой выборке:</p>
-<p><span class="math">\[ { 2 }^{ 2.9 }=7.46 \]</span></p>
-<p>Т.е. от средней арифметической оценки мы перешли к <a href="https://ru.wikipedia.org/wiki/%D0%A1%D1%80%D0%B5%D0%B4%D0%BD%D0%B5%D0%B5_%D0%B3%D0%B5%D0%BE%D0%BC%D0%B5%D1%82%D1%80%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5">средней геометрической</a>. Эта оценка является смещенной и требует дополнительного умножения на “константу Чапаева”, которая зависит от числа выборок.</p>
-<p>Таким образом, вместо минимальных чисел в выборке, мы используем максимальное число старших битов установленных в ноль. Это позволит нам в дальнейшем сэкономить на памяти, т.к., например, вместо того, чтобы хранить 32-битное минимальное число, мы будем хранить максимальное число старших битов установленных в ноль, для чего достаточно 5 бит (\( 32 = { 2 }^{ 5 } \)). На самом деле, как несложно заметить, вместо подсчета числа старших битов установленных в ноль, можно считать число младших битов установленных в ноль - вероятности получаются одинаковыми.</p>
-<p>Что нам это дает? Ведь в исходной постановке задачи у нас есть всего одна выборка, хоть и очень большая, к тому же данные у нас скорее всего распределены не равномерно, хотя мы и можем сказать, каким числом данные ограничены сверху. Например, если говорить об IP адресах, то понятно, что нам достаточно 4-х байтов или 32 битов, чтобы представить все возможные значения адресов, однако IP адреса по конкретному региону будут скорее всего сосредоточены в каком-то узком диапазоне этих значений и никак не будут распределены равномерно по всему диапазону.</p>
+<p><span class="math display">\[ { 2 }^{ 2.9 }=7.46 \]</span></p>
+<p>Т.е. от средней арифметической оценки мы перешли к <a href="https://ru.wikipedia.org/wiki/%D0%A1%D1%80%D0%B5%D0%B4%D0%BD%D0%B5%D0%B5_%D0%B3%D0%B5%D0%BE%D0%BC%D0%B5%D1%82%D1%80%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5">средней геометрической</a>.
+Эта оценка является смещенной и требует дополнительного умножения на “константу Чапаева”, которая зависит от числа выборок.</p>
+<p>Таким образом, вместо минимальных чисел в выборке, мы используем максимальное число старших битов установленных в ноль. Это позволит
+нам в дальнейшем сэкономить на памяти, т.к., например, вместо того, чтобы хранить 32-битное минимальное число, мы будем хранить максимальное
+число старших битов установленных в ноль, для чего достаточно 5 бит (\( 32 = { 2 }^{ 5 } \)). На самом деле, как несложно заметить, вместо
+подсчета числа старших битов установленных в ноль, можно считать число младших битов установленных в ноль - вероятности получаются одинаковыми.</p>
+<p>Что нам это дает? Ведь в исходной постановке задачи у нас есть всего одна выборка, хоть и очень большая, к тому же данные у нас скорее всего
+распределены не равномерно, хотя мы и можем сказать, каким числом данные ограничены сверху. Например, если говорить об IP адресах, то понятно,
+что нам достаточно 4-х байтов или 32 битов, чтобы представить все возможные значения адресов, однако IP адреса по конкретному региону
+будут скорее всего сосредоточены в каком-то узком диапазоне этих значений и никак не будут распределены равномерно по всему диапазону.</p>
 <h2 id="hashing">Хеширование и стохастическое усреднение</h2>
-<p>Хоть у нас и есть одна большая выборка с неслучайными данными, возникает естественное желание создать искусственное отображение этих неслучайных данных в несколько (чем больше, тем лучше) выборок со случайными данными. Если говорить точнее, то мы хотим придумать такие хеш-функции <span class="math">\[ { f }_{ 1 }, { f }_{ 2 }, \dots , { f }_{ s } \]</span> каждая из которых отображала бы первоначальную выборку с неслучайными данными в выборку со случайными данными, равномерно распределенными на каком-то интервале фиксированной длины (важно, чтобы значения всех функций были в одном интервале, чтобы потом ничего не нормировать). Таким образом у нас бы было s выборок со случайными данными, с примерно одинаковым числом случайных данных (в виду возможных коллизий) в каждой выборке и мы смогли бы тогда легко оценить число уникальных элементов, как мы это делали выше.</p>
+<p>Хоть у нас и есть одна большая выборка с неслучайными данными, возникает естественное желание создать искусственное отображение этих неслучайных данных в
+несколько (чем больше, тем лучше) выборок со случайными данными. Если говорить точнее, то мы хотим придумать такие хеш-функции
+<span class="math display">\[ { f }_{ 1 }, { f }_{ 2 }, \dots , { f }_{ s } \]</span>
+каждая из которых отображала бы первоначальную выборку с неслучайными данными в выборку со случайными данными, равномерно распределенными на каком-то интервале
+фиксированной длины (важно, чтобы значения всех функций были в одном интервале, чтобы потом ничего не нормировать). Таким образом у нас бы было s выборок со
+случайными данными, с примерно одинаковым числом случайных данных (в виду возможных коллизий) в каждой выборке и мы смогли бы тогда легко оценить число уникальных
+элементов, как мы это делали выше.</p>
 <p>То, что мы хотим сделать, <em>теоретически</em> невозможно, но Дональд Кнут в третьем томе своей книги “Искусство программирования” (Вильямс, 2000) нас обнадеживает:</p>
 <blockquote>
-<p><em>Теоретически невозможно определить хеш-функцию так, чтобы она создавала случайные данные из реальных неслучайных файлов. Однако на практике реально создать достаточно хорошую имитацию с помощью простых арифметических действий. Более того, зачастую можно использовать особенности данных для создания хеш-функций с минимальным числом коллизий (меньшим, чем при истинно случайных данных).</em></p>
+<p><em>Теоретически невозможно определить хеш-функцию так, чтобы она создавала случайные данные из реальных неслучайных файлов. Однако на практике реально создать
+достаточно хорошую имитацию с помощью простых арифметических действий. Более того, зачастую можно использовать особенности данных для создания хеш-функций с
+минимальным числом коллизий (меньшим, чем при истинно случайных данных).</em></p>
 </blockquote>
-<p>При наличии s таких хеш-функций, мы бы могли завести массив на s элементов (по элементу на каждую хеш-функцию), где каждый элемент массива \( r_i \) будет представлять максимальное число старших битов установленных в ноль среди полученных хеш-значений данной хеш-функции. Тогда число уникальных элементов можно было бы оценить, как</p>
-<p><span class="math">\[ constant\cdot { 2 }^{ \overline { R }  } \]</span></p>
+<p>При наличии s таких хеш-функций, мы бы могли завести массив на s элементов (по элементу на каждую хеш-функцию), где каждый элемент массива \( r_i \) будет представлять
+максимальное число старших битов установленных в ноль среди полученных хеш-значений данной хеш-функции. Тогда число уникальных элементов можно было бы оценить, как</p>
+<p><span class="math display">\[ constant\cdot { 2 }^{ \overline { R }  } \]</span></p>
 <p>где</p>
-<p><span class="math">\[ \overline { R } =\frac { 1 }{ s } \sum _{ i=1 }^{ s }{ { r }_{ i } } \]</span></p>
-<p>Хотя интуитивная идея подсчета числа уникальных элементов уже несколько оформилась на бумаге, но она не достаточно хороша, потому что нам, во-первых, нужно еще придумать s разных независимых друг от друга хеш-функций, причем так, чтобы мы могли легко изменять их число в зависимости от желаемой точности, во-вторых, вычисление s хешей для каждого элемента может быть несколько накладным. Вместо этого прибегнем к небольшому трюку - будем использовать всего одну хеш-функцию, старшие k бит которой будут определять номер выборки, а оставшиеся биты будут хеш значением, которое должно попасть в ту выборку. Эта процедура называется <a href="http://www.mathcs.emory.edu/~cheung/papers/StreamDB/Probab/1985-Flajolet-Probabilistic-counting.pdf">стохастическим усреднением</a>.</p>
-<p>Например, выберем k=4 (т.е. результирующих выборок будет \( m={ 2 }^{ 4 }=16 \)), и для какого-то элемента выборки, хеш-значение оказывается равным 1011100110101011 (16-битная хеш-функция, n=16) в двоичном представлении: <span class="math">\[ \underbrace { 1011 }_{ k=4 } \underbrace { 100110101011 }_{ n-k=12 } \]</span> Это будет означать, что мы сгенерировали 12-битный хеш b100110101011=2475, который попадает только в выборку b1011=11, если нумеровать выборки с нуля.</p>
-<p>Таким образом каждый элемент исходной выборки попадает случайным образом только в одну из m выборок, в то же время все m выборок, в виду случайности распределения, заполняются равномерно примерно одинаковым числом элементов, поэтому прежнюю оценку числа уникальных элементов необходимо умножить на m, чтобы оценить не просто число уникальных элементов в каждой отдельной выборке, а в целом, сколько было в первоначальной:</p>
-<p><span class="math">\[ constant\cdot m\cdot { 2 }^{ \overline { R }  }=constant\cdot { 2 }^{ k }\cdot { 2 }^{ \overline { R }  } \]</span></p>
+<p><span class="math display">\[ \overline { R } =\frac { 1 }{ s } \sum _{ i=1 }^{ s }{ { r }_{ i } } \]</span></p>
+<p>Хотя интуитивная идея подсчета числа уникальных элементов уже несколько оформилась на бумаге, но она не достаточно хороша, потому что нам, во-первых, нужно еще придумать
+s разных независимых друг от друга хеш-функций, причем так, чтобы мы могли легко изменять их число в зависимости от желаемой точности, во-вторых, вычисление s хешей для
+каждого элемента может быть несколько накладным. Вместо этого прибегнем к небольшому трюку - будем использовать всего одну хеш-функцию, старшие k бит которой
+будут определять номер выборки, а оставшиеся биты будут хеш значением, которое должно попасть в ту выборку. Эта процедура называется <a href="http://www.mathcs.emory.edu/~cheung/papers/StreamDB/Probab/1985-Flajolet-Probabilistic-counting.pdf">стохастическим усреднением</a>.</p>
+<p>Например, выберем k=4 (т.е. результирующих выборок будет \( m={ 2 }^{ 4 }=16 \)), и для какого-то элемента выборки, хеш-значение
+оказывается равным 1011100110101011 (16-битная хеш-функция, n=16) в двоичном представлении:
+<span class="math display">\[ \underbrace { 1011 }_{ k=4 } \underbrace { 100110101011 }_{ n-k=12 } \]</span>
+Это будет означать, что мы сгенерировали 12-битный хеш b100110101011=2475, который попадает только в выборку b1011=11, если нумеровать выборки с нуля.</p>
+<p>Таким образом каждый элемент исходной выборки попадает случайным образом только в одну из m выборок, в то же время все m выборок, в виду случайности распределения,
+заполняются равномерно примерно одинаковым числом элементов, поэтому прежнюю оценку числа уникальных элементов необходимо умножить на m, чтобы оценить не просто число
+уникальных элементов в каждой отдельной выборке, а в целом, сколько было в первоначальной:</p>
+<p><span class="math display">\[ constant\cdot m\cdot { 2 }^{ \overline { R }  }=constant\cdot { 2 }^{ k }\cdot { 2 }^{ \overline { R }  } \]</span></p>
 <h2 id="алгоритм-loglog">Алгоритм LogLog</h2>
-<p>Последняя формула, которую мы получили выше, является оценочной функцией в алгоритме <a href="http://algo.inria.fr/flajolet/Publications/DuFl03-LNCS.pdf">LogLog</a>. Единственным отличием является то, что вместо числа нулей в старших битах, там вычисляется позиция \( \rho (x) \) первого ненулевого старшего бита, т.е. на единицу большее значение, так что \( \rho (1)=1 \), \( \rho (001)=3 \) и т.д. Ну и, соответственно, “константа Чапаева” немного меняется в зависимости от числа выборок. Весь алгоритм выглядит так:</p>
-<ol style="list-style-type: decimal">
+<p>Последняя формула, которую мы получили выше, является оценочной функцией в алгоритме <a href="http://algo.inria.fr/flajolet/Publications/DuFl03-LNCS.pdf">LogLog</a>.
+Единственным отличием является то, что вместо числа нулей в старших битах, там вычисляется позиция \( \rho (x) \) первого ненулевого старшего бита, т.е. на
+единицу большее значение, так что \( \rho (1)=1 \), \( \rho (001)=3 \) и т.д.
+Ну и, соответственно, “константа Чапаева” немного меняется в зависимости от числа выборок. Весь алгоритм выглядит так:</p>
+<ol type="1">
 <li>Выбираем число k такое, что \( m={ 2 }^{ k } \) будет числом выборок, между которыми распределяться все хеш-значения. От этого числа будет зависеть точность оценки.</li>
 <li>Инициализируем массив из m элементов нулями: \( { M }^{ (1) },\dots ,{ M }^{ (m) } \)</li>
-<li>Для каждого элемента первоначальной выборки вычисляем хеш (в двоичном виде): <span class="math">\[ x={ \left&lt;{ b }_{ 1 }{ b }_{ 2 }\dots\right&gt;  }_{ 2 } \]</span> определяем номер выборки, как значение первых k бит в системе счисления с основанием 2: <span class="math">\[ j:=1 + { \left&lt; { b }_{ 1 }\dots { b }_{ k } \right&gt;  }_{ 2 } \]</span> и обновляем соответствующий элемент массива: <span class="math">\[ { M }^{ (j) }:=\max { \left( { M }^{ (j) },\rho ({ b }_{ k+1 }{ b }_{ k+2 }\dots ) \right)  } \]</span></li>
-<li>Вычисляем оценку числа уникальных элементов как <span class="math">\[  E:={ \alpha  }_{ m }\cdot m\cdot { 2 }^{ \frac { 1 }{ m } \sum _{ j=1 }^{ m }{ { M }^{ (j) } }  } \]</span> <span class="math">\[ { \alpha  }_{ m }\sim { \alpha  }_{ \infty  }-\frac { 2{ \pi  }^{ 2 }+{ \ln^{2}{2}  } }{ 48m } \]</span> <span class="math">\[ { \alpha  }_{ \infty  }={ e }^{ -\gamma  }\frac { \sqrt { 2 }  }{ 2 } \doteq 0.397011808 \]</span> где \( \gamma \) - <a href="https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D0%BD%D0%BD%D0%B0%D1%8F_%D0%AD%D0%B9%D0%BB%D0%B5%D1%80%D0%B0_%E2%80%94_%D0%9C%D0%B0%D1%81%D0%BA%D0%B5%D1%80%D0%BE%D0%BD%D0%B8">постоянная Эйлера</a>. На практике константа \( \alpha_m \) может быть заменена на \( \alpha_\infty \) при \( m\ge64 \).</li>
+<li>Для каждого элемента первоначальной выборки вычисляем хеш (в двоичном виде):
+<span class="math display">\[ x={ \left&lt;{ b }_{ 1 }{ b }_{ 2 }\dots\right&gt;  }_{ 2 } \]</span>
+определяем номер выборки, как значение первых k бит в системе счисления с основанием 2:
+<span class="math display">\[ j:=1 + { \left&lt; { b }_{ 1 }\dots { b }_{ k } \right&gt;  }_{ 2 } \]</span>
+и обновляем соответствующий элемент массива:
+<span class="math display">\[ { M }^{ (j) }:=\max { \left( { M }^{ (j) },\rho ({ b }_{ k+1 }{ b }_{ k+2 }\dots ) \right)  } \]</span></li>
+<li>Вычисляем оценку числа уникальных элементов как
+<span class="math display">\[  E:={ \alpha  }_{ m }\cdot m\cdot { 2 }^{ \frac { 1 }{ m } \sum _{ j=1 }^{ m }{ { M }^{ (j) } }  } \]</span>
+<span class="math display">\[ { \alpha  }_{ m }\sim { \alpha  }_{ \infty  }-\frac { 2{ \pi  }^{ 2 }+{ \ln^{2}{2}  } }{ 48m } \]</span>
+<span class="math display">\[ { \alpha  }_{ \infty  }={ e }^{ -\gamma  }\frac { \sqrt { 2 }  }{ 2 } \doteq 0.397011808 \]</span>
+где \( \gamma \) - <a href="https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D0%BD%D0%BD%D0%B0%D1%8F_%D0%AD%D0%B9%D0%BB%D0%B5%D1%80%D0%B0_%E2%80%94_%D0%9C%D0%B0%D1%81%D0%BA%D0%B5%D1%80%D0%BE%D0%BD%D0%B8">постоянная Эйлера</a>.
+На практике константа \( \alpha_m \) может быть заменена на \( \alpha_\infty \) при \( m\ge64 \).</li>
 </ol>
-<p>Стандартная ошибка оценки по алгоритму LogLog составляет \( \approx \frac { 1.30 }{ \sqrt { m } } \). Таким образом при m=256 и m=1024 стандартная ошибка составляет соответственно 8.1% и 4.1% от истинного числа уникальных элементов. Как мы помним, нам достаточно 5 бит для каждого из m элементов массива, поэтому при m=1024 используемая память будет составлять 5120 бит или 640 байт, что довольно неплохо, для стандартной ошибки в 4.1%.</p>
+<p>Стандартная ошибка оценки по алгоритму LogLog составляет \( \approx \frac { 1.30 }{ \sqrt { m } } \). Таким образом при m=256 и m=1024 стандартная ошибка
+составляет соответственно 8.1% и 4.1% от истинного числа уникальных элементов. Как мы помним, нам достаточно 5 бит для каждого из m элементов массива, поэтому при
+m=1024 используемая память будет составлять 5120 бит или 640 байт, что довольно неплохо, для стандартной ошибки в 4.1%.</p>
 <h2 id="HyperLogLog">Увеличиваем точность: алгоритмы SuperLogLog и HyperLogLog</h2>
-<p>Ученые Durand и Flajolet пришли к выводу, что можно еще улучшить алгоритм, если перед усреднением выбросить 30% элементов с наибольшими значениями и усреднить оставшиеся 70% значений, в таком случае стандартная ошибка оценки уменьшается с \( \frac { 1.30 }{ \sqrt { m } } \) до \( \frac { 1.05 }{ \sqrt { m } } \). Это значит, что при m=1024 и используемой при этом памяти 640 байт стандартная ошибка уменьшается с 4.1% до 3.28%. Так появился алгоритм SuperLogLog.</p>
-<p>Следующим значительным вкладом Flajolet было использование гармонического среднего, вместо среднего геометрического, в результате чего возник алгоритм <a href="http://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf">HyperLogLog</a>, в котором стандартную ошибку оценки удалось уменьшить до \( \frac { 1.04 }{ \sqrt { m } } \). Хотя в целом алгоритм и очень похож на LogLog, но HyperLogLog немного более сложен, т.к. использует гармоническое среднее и требует дополнительных коррекций для больших и малых оценок уникальных элементов.</p>
-<p>Практический вариант алгоритма HyperLogLog, который пригоден для оценки числа уникальных элементов лежащего в интервале \( \left[ 0,10^9 \right] \) с использованием количества выборок \( m=2^4,\dots ,2^{16} \) и 32-битной хеш-функцией представлен ниже:</p>
-<ol style="list-style-type: decimal">
+<p>Ученые Durand и Flajolet пришли к выводу, что можно еще улучшить алгоритм, если перед усреднением выбросить 30% элементов с наибольшими значениями и
+усреднить оставшиеся 70% значений, в таком случае стандартная ошибка оценки уменьшается с \( \frac { 1.30 }{ \sqrt { m } } \) до \( \frac { 1.05 }{ \sqrt { m } } \).
+Это значит, что при m=1024 и используемой при этом памяти 640 байт стандартная ошибка уменьшается с 4.1% до 3.28%. Так появился алгоритм SuperLogLog.</p>
+<p>Следующим значительным вкладом Flajolet было использование гармонического среднего, вместо среднего геометрического, в результате чего возник алгоритм <a href="http://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf">HyperLogLog</a>,
+в котором стандартную ошибку оценки удалось уменьшить до \( \frac { 1.04 }{ \sqrt { m } } \). Хотя в целом алгоритм и очень похож на LogLog, но HyperLogLog немного
+более сложен, т.к. использует гармоническое среднее и требует дополнительных коррекций для больших и малых оценок уникальных элементов.</p>
+<p>Практический вариант алгоритма HyperLogLog, который пригоден для оценки числа уникальных элементов лежащего в интервале \( \left[ 0,10^9 \right] \) с
+использованием количества выборок \( m=2^4,\dots ,2^{16} \) и 32-битной хеш-функцией представлен ниже:</p>
+<ol type="1">
 <li>Выбираем число k=4..16 такое, что \( m={ 2 }^{ k } \) будет числом выборок, между которыми распределяться все хеш-значения.</li>
-<li>Определяем константы: \( \alpha_{16}=0.673 \), \( \alpha_{32}=0.697 \), \( \alpha_{64}=0.709 \), \( \alpha_m=0.7213/{\left(1+{1.079}/{m}\right) } \) при \( m\ge 128 \).</li>
+<li>Определяем константы: \( \alpha_{16}=0.673 \), \( \alpha_{32}=0.697 \), \( \alpha_{64}=0.709 \),
+\( \alpha_m=0.7213/{\left(1+{1.079}/{m}\right) } \) при \( m\ge 128 \).</li>
 <li>Инициализируем массив из m элементов нулями: \( { M }^{ (1) },\dots ,{ M }^{ (m) } \)</li>
-<li>Для каждого элемента первоначальной выборки вычисляем хеш (в двоичном виде): <span class="math">\[ x={ \left&lt;{ b }_{ 1 }{ b }_{ 2 }\dots{ b }_{ 32 } \right&gt;  }_{ 2 } \]</span> определяем номер выборки, как значение первых k бит в системе счисления с основанием 2: <span class="math">\[ j:=1 + { \left&lt; { b }_{ 1 }\dots { b }_{ k } \right&gt;  }_{ 2 } \]</span> и обновляем соответствующий элемент массива: <span class="math">\[ { M }^{ (j) }:=\max { \left( { M }^{ (j) },\rho ({ b }_{ k+1 }{ b }_{ k+2 }\dots{ b }_{ 32 } ) \right)  } \]</span> где \( \rho(x) \) - позиция первого ненулевого старшего бита: \( \rho (1)=1 \), \( \rho (001)=3 \), \( \rho(\underbrace{0\dots0}_{n})=n+1 \)</li>
-<li>Вычисляем “сырую” оценку числа уникальных элементов как <span class="math">\[ E:={ \alpha  }_{ m }\cdot { m }^{ 2 }\cdot { \left( \sum _{ j=1 }^{ m }{ { 2 }^{ -{ M }^{ (j) } } }  \right)  }^{ -1 }  \]</span>
+<li>Для каждого элемента первоначальной выборки вычисляем хеш (в двоичном виде):
+<span class="math display">\[ x={ \left&lt;{ b }_{ 1 }{ b }_{ 2 }\dots{ b }_{ 32 } \right&gt;  }_{ 2 } \]</span>
+определяем номер выборки, как значение первых k бит в системе счисления с основанием 2:
+<span class="math display">\[ j:=1 + { \left&lt; { b }_{ 1 }\dots { b }_{ k } \right&gt;  }_{ 2 } \]</span>
+и обновляем соответствующий элемент массива:
+<span class="math display">\[ { M }^{ (j) }:=\max { \left( { M }^{ (j) },\rho ({ b }_{ k+1 }{ b }_{ k+2 }\dots{ b }_{ 32 } ) \right)  } \]</span>
+где \( \rho(x) \) - позиция первого ненулевого старшего бита: \( \rho (1)=1 \), \( \rho (001)=3 \), \( \rho(\underbrace{0\dots0}_{n})=n+1 \)</li>
+<li>Вычисляем “сырую” оценку числа уникальных элементов как
+<span class="math display">\[ E:={ \alpha  }_{ m }\cdot { m }^{ 2 }\cdot { \left( \sum _{ j=1 }^{ m }{ { 2 }^{ -{ M }^{ (j) } } }  \right)  }^{ -1 }  \]</span>
 <ul>
-<li>Если \( E\le\frac{5}{2}m \), то пусть \( V \) - число регистров \( M^{(j)} \) равных нулю, тогда при \( V\neq0 \) <span class="math">\[ E^{ * }:=m\cdot \ln { \frac { m }{ V }  } \]</span> иначе \( E^{ * }:= E \) (<em>коррекция малых оценок</em>)</li>
+<li>Если \( E\le\frac{5}{2}m \), то пусть \( V \) - число регистров \( M^{(j)} \) равных нулю, тогда
+при \( V\neq0 \)
+<span class="math display">\[ E^{ * }:=m\cdot \ln { \frac { m }{ V }  } \]</span>
+иначе \( E^{ * }:= E \) (<em>коррекция малых оценок</em>)</li>
 <li>Если \( E\le\frac{1}{30}{2}^{32} \), то \( E^{ * }:= E \) (<em>коррекция средних оценок</em>)</li>
-<li>Если \( E&gt;\frac{1}{30}{2}^{32} \), то <span class="math">\[ E^{*}:=-{2}^{32}\ln{\left(1-{E}/{{2}^{32}}\right) } \]</span> (<em>коррекция больших оценок</em>)</li>
+<li>Если \( E&gt;\frac{1}{30}{2}^{32} \), то
+<span class="math display">\[ E^{*}:=-{2}^{32}\ln{\left(1-{E}/{{2}^{32}}\right) } \]</span> (<em>коррекция больших оценок</em>)</li>
 </ul></li>
 <li>Возвращаем \( E^{*} \) - скорректированную оценку числа уникальных элементов</li>
 </ol>
 <h2 id="параллельные-вычисления-и-объединение-результатов">Параллельные вычисления и объединение результатов</h2>
-<p>Одним несомненным преимуществом алгоритмов семейства LogLog является то, что их можно легко распараллеливать. В самом деле, если посмотреть на 4-ый шаг алгоритма HyperLogLog, то несложно заметить, что можно разбить первоначальную выборку на несколько более мелких и выполнить 4-ый шаг отдельно для каждой из них. После этого полученные массивы легко объединить в один, оставляя максимальное значение соответствующих регистров. Главное, чтобы применялась одна и та же хеш-функция и число выборок m было одинаковым. Тогда результат, как несложно заметить, будет точно таким же, как если бы мы производили оценку только по первоначальной выборке.</p>
-<p>Кстати, это же свойство помогает нам легко объединять независимые оценки друг с другом. Предположим, у нас есть n оценок числа уникальных посетителей страниц товаров \( P_1, P_2, \dots, P_n \). Если мы хотим узнать сколько имеется всего уникальных пользователей, которые посетили хотя бы один из группы интересующих нас товаров, мы можем легко это сделать просто объединив массивы регистров соответствующих товаров. При этом понятно, что пользователь, который посетил страницы всех товаров, будет учтен как один.</p>
-<p>Точно также, если у нас есть группа серверов в кластере, предоставляющих какой-то сервис, можно независимо на каждом сервере считать, например, число уникальных пользователей, а затем объединять результаты всех серверов, чтобы определить, скольких уникальных пользователей обслуживал весь кластер (ведь один уникальный пользователь мог обслуживаться несколькими серверами в кластере). Ну и на этой основе можно сделать какие-то простые предупреждающие тригеры. Например, если число уникальных пользователей за единицу времени сильно увеличилось, то либо бизнес пошел в гору, либо вас досят. :) И как мы уже знаем, для этого не нужно держать всех уникальных пользователей в памяти, достаточно буквально килобайта данных (ну или больше, если нужна точность, например, при 64 килобайтах стандартная ошибка будет составлять 0.4%).</p>
+<p>Одним несомненным преимуществом алгоритмов семейства LogLog является то, что их можно легко распараллеливать. В самом деле, если посмотреть на 4-ый шаг алгоритма
+HyperLogLog, то несложно заметить, что можно разбить первоначальную выборку на несколько более мелких и выполнить 4-ый шаг отдельно для каждой из них.
+После этого полученные массивы легко объединить в один, оставляя максимальное значение соответствующих регистров. Главное, чтобы применялась одна и та же
+хеш-функция и число выборок m было одинаковым. Тогда результат, как несложно заметить, будет точно таким же, как если бы мы производили оценку только по первоначальной
+выборке.</p>
+<p>Кстати, это же свойство помогает нам легко объединять независимые оценки друг с другом. Предположим, у нас есть n оценок числа уникальных посетителей страниц товаров
+\( P_1, P_2, \dots, P_n \). Если мы хотим узнать сколько имеется всего уникальных пользователей, которые посетили хотя бы один из группы интересующих нас товаров,
+мы можем легко это сделать просто объединив массивы регистров соответствующих товаров. При этом понятно, что пользователь, который посетил страницы всех товаров,
+будет учтен как один.</p>
+<p>Точно также, если у нас есть группа серверов в кластере, предоставляющих какой-то сервис, можно независимо на каждом сервере считать, например, число уникальных
+пользователей, а затем объединять результаты всех серверов, чтобы определить, скольких уникальных пользователей обслуживал весь кластер (ведь один уникальный
+пользователь мог обслуживаться несколькими серверами в кластере). Ну и на этой основе можно сделать какие-то простые предупреждающие тригеры. Например, если число
+уникальных пользователей за единицу времени сильно увеличилось, то либо бизнес пошел в гору, либо вас досят. :) И как мы уже знаем, для этого не нужно держать всех
+уникальных пользователей в памяти, достаточно буквально килобайта данных (ну или больше, если нужна точность, например, при 64 килобайтах стандартная ошибка будет
+составлять 0.4%).</p>
 </section>
 </article>
 <div class="likebutton">
 	<div class="socbuttons">
 		<div class="twitter">
-			<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/" data-text="Оценка приблизительного числа уникальных элементов в наборе данных" data-via="dimchansky" data-hashtags="cardinality-estimation, big-data, LogLog, SuperLogLog, HyperLogLog">Tweet</a>
+			<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/" data-text="Оценка приблизительного числа уникальных элементов в наборе данных" data-via="dimchansky" data-hashtags="cardinality-estimation, big-data, LogLog, SuperLogLog, HyperLogLog">Tweet</a>
 			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 		</div>
 		<div class="facebook">
-			<iframe style="border: none; overflow: hidden; width: 135px; height: 20px;" src="http://www.facebook.com/plugins/like.php?href=http://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/&layout=button_count&show_faces=false&width=135&action=like&colorscheme=light&height=20" height="240" width="320" frameborder="0" scrolling="no"></iframe>
+			<iframe style="border: none; overflow: hidden; width: 135px; height: 20px;" src="http://www.facebook.com/plugins/like.php?href=https://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/&layout=button_count&show_faces=false&width=135&action=like&colorscheme=light&height=20" height="240" width="320" frameborder="0" scrolling="no"></iframe>
 		</div>
 		<div class="vkontakte"></div>
 		<div class="google">

@@ -1,82 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <title>Непутёвые заметки Димчанского</title>
-    <link href="http://dimchansky.github.io/atom.xml" rel="self" />
-    <link href="http://dimchansky.github.io" />
-    <id>http://dimchansky.github.io/atom.xml</id>
+    <link href="https://dimchansky.github.io/atom.xml" rel="self" />
+    <link href="https://dimchansky.github.io" />
+    <id>https://dimchansky.github.io/atom.xml</id>
     <author>
         <name>Dmitrij Koniajev</name>
+        
         <email>dimchansky@gmail.com</email>
+        
     </author>
     <updated>2014-12-31T00:00:00Z</updated>
     <entry>
     <title>В гостях у KTU</title>
-    <link href="http://dimchansky.github.io/posts/2014/12/31/real-life-applications-of-mathematics/" />
-    <id>http://dimchansky.github.io/posts/2014/12/31/real-life-applications-of-mathematics/</id>
+    <link href="https://dimchansky.github.io/posts/2014/12/31/real-life-applications-of-mathematics/" />
+    <id>https://dimchansky.github.io/posts/2014/12/31/real-life-applications-of-mathematics/</id>
     <published>2014-12-31T00:00:00Z</published>
     <updated>2014-12-31T00:00:00Z</updated>
     <summary type="html"><![CDATA[Расширенный доклад "Real life applications of mathematics" в Каунасском технологическом университете (KTU)]]></summary>
 </entry>
 <entry>
     <title>Магия Haskell - вызываем джина</title>
-    <link href="http://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/" />
-    <id>http://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/</id>
+    <link href="https://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/" />
+    <id>https://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/</id>
     <published>2014-11-30T00:00:00Z</published>
     <updated>2014-11-30T00:00:00Z</updated>
     <summary type="html"><![CDATA[Генерирование кода функции по ее типу с помощью джина (djinn)]]></summary>
 </entry>
 <entry>
     <title>Примеры применения Haskell в реальной жизни</title>
-    <link href="http://dimchansky.github.io/posts/2014/11/05/haskell-real-life-use/" />
-    <id>http://dimchansky.github.io/posts/2014/11/05/haskell-real-life-use/</id>
+    <link href="https://dimchansky.github.io/posts/2014/11/05/haskell-real-life-use/" />
+    <id>https://dimchansky.github.io/posts/2014/11/05/haskell-real-life-use/</id>
     <published>2014-11-05T00:00:00Z</published>
     <updated>2014-11-05T00:00:00Z</updated>
     <summary type="html"><![CDATA[Примеры коммерческого использования, коммерческих сервисов, приложений на Haskell]]></summary>
 </entry>
 <entry>
     <title>Имплементация HyperLogLog на C#</title>
-    <link href="http://dimchansky.github.io/posts/2014/10/26/hyperloglog-csharp-implementation/" />
-    <id>http://dimchansky.github.io/posts/2014/10/26/hyperloglog-csharp-implementation/</id>
+    <link href="https://dimchansky.github.io/posts/2014/10/26/hyperloglog-csharp-implementation/" />
+    <id>https://dimchansky.github.io/posts/2014/10/26/hyperloglog-csharp-implementation/</id>
     <published>2014-10-26T00:00:00Z</published>
     <updated>2014-10-26T00:00:00Z</updated>
     <summary type="html"><![CDATA[Имплементация алгоритма HyperLogLog для приблизительного вычисления числа уникальных элементов в наборе данных на C#]]></summary>
 </entry>
 <entry>
     <title>Оценка приблизительного числа уникальных элементов в наборе данных</title>
-    <link href="http://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/" />
-    <id>http://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/</id>
+    <link href="https://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/" />
+    <id>https://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/</id>
     <published>2014-10-20T00:00:00Z</published>
     <updated>2014-10-20T00:00:00Z</updated>
     <summary type="html"><![CDATA[Применение алгоритма HyperLogLog для приблизительного вычисления числа уникальных элементов в наборе данных]]></summary>
 </entry>
 <entry>
     <title>Создаем блог с помощью Hakyll</title>
-    <link href="http://dimchansky.github.io/posts/2014/10/07/getting-started-with-hakyll/" />
-    <id>http://dimchansky.github.io/posts/2014/10/07/getting-started-with-hakyll/</id>
+    <link href="https://dimchansky.github.io/posts/2014/10/07/getting-started-with-hakyll/" />
+    <id>https://dimchansky.github.io/posts/2014/10/07/getting-started-with-hakyll/</id>
     <published>2014-10-07T00:00:00Z</published>
     <updated>2014-10-07T00:00:00Z</updated>
     <summary type="html"><![CDATA[Подробное описание процесса создания блога на github с помощью Hakyll под Windows]]></summary>
 </entry>
 <entry>
     <title>Первый пост</title>
-    <link href="http://dimchansky.github.io/posts/2014/10/06/first-post/" />
-    <id>http://dimchansky.github.io/posts/2014/10/06/first-post/</id>
+    <link href="https://dimchansky.github.io/posts/2014/10/06/first-post/" />
+    <id>https://dimchansky.github.io/posts/2014/10/06/first-post/</id>
     <published>2014-10-06T00:00:00Z</published>
     <updated>2014-10-06T00:00:00Z</updated>
     <summary type="html"><![CDATA[Описывает начало очередного витка спирали жизни]]></summary>
 </entry>
 <entry>
     <title>Ним на Elm</title>
-    <link href="http://dimchansky.github.io/posts/2014/08/18/nim-game-in-elm/" />
-    <id>http://dimchansky.github.io/posts/2014/08/18/nim-game-in-elm/</id>
+    <link href="https://dimchansky.github.io/posts/2014/08/18/nim-game-in-elm/" />
+    <id>https://dimchansky.github.io/posts/2014/08/18/nim-game-in-elm/</id>
     <published>2014-08-18T00:00:00Z</published>
     <updated>2014-08-18T00:00:00Z</updated>
     <summary type="html"><![CDATA[Игра Ним написанная на языке программирования Elm]]></summary>
 </entry>
 <entry>
     <title>Real Life Applications of Mathematics</title>
-    <link href="http://dimchansky.github.io/posts/2013/07/09/real-life-applications-of-mathematics/" />
-    <id>http://dimchansky.github.io/posts/2013/07/09/real-life-applications-of-mathematics/</id>
+    <link href="https://dimchansky.github.io/posts/2013/07/09/real-life-applications-of-mathematics/" />
+    <id>https://dimchansky.github.io/posts/2013/07/09/real-life-applications-of-mathematics/</id>
     <published>2013-07-09T00:00:00Z</published>
     <updated>2013-07-09T00:00:00Z</updated>
     <summary type="html"><![CDATA[Слайды с доклада "Real life applications of mathematics" в Adform Academy]]></summary>
