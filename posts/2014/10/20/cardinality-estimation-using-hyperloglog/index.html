@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html lang="ru">
     <head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="chrome=1" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
 		<meta name="author" content="Dmitrij Koniajev" />		
         <title>Оценка приблизительного числа уникальных элементов в наборе данных - Непутёвые заметки Димчанского</title>
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
-        <link rel="stylesheet" type="text/css" href="../../../../../css/default.css" />
-		<link rel="stylesheet" type="text/css" href="../../../../../css/syntax.css" />
+		<style>
+			@import url("https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500&family=Fira+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Merriweather:ital,wght@0,300;0,400;1,300;1,400&display=swap");
+		</style>
+		<link rel="stylesheet" href="../../../../../css/main.min.css?v=9ad582" />
+
+		
+		<!-- KaTeX -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css" integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI" crossorigin="anonymous" />
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js" integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t" crossorigin="anonymous"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+		<!-- End KaTeX Code -->
+		
 		
 		<script type="text/javascript">
 		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -18,23 +32,24 @@
 		  ga('send', 'pageview');
 
 		</script>	
-        <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     </head>
-    <body>
-		<div id="wrapper">
-			<div id="header">
-				<div class="header-logo"><h1><a href="../../../../../">Непутёвые заметки Димчанского</a></h1></div>
-				<div class="header-links">
-					<a href="https://twitter.com/dimchansky"><i class="fa fa-twitter fa-fw fa-2x"></i></a>
-					<a href="https://github.com/dimchansky"><i class="fa fa-github fa-fw fa-2x"></i></a>
-					<a href="https://www.linkedin.com/in/dimchansky"><i class="fa fa-linkedin fa-fw fa-2x"></i></a>
-					<a href="https://www.youtube.com/user/Dimchansky"><i class="fa fa-youtube fa-fw fa-2x"></i></a>
-					<a href="../../../../../atom.xml"><i class="fa fa-rss fa-fw fa-2x"></i></a>
-				</div>
-			</div>	
+	<body>
+	<div id="header">
+		<div class="header-logo">
+			<h1><a href="../../../../../">Непутёвые заметки Димчанского</a></h1>
+		</div>
+		<div class="header-links">
+			<a href="https://twitter.com/dimchansky"><i class="fa fa-twitter fa-fw fa-2x"></i></a>
+			<a href="https://github.com/dimchansky"><i class="fa fa-github fa-fw fa-2x"></i></a>
+			<a href="https://www.linkedin.com/in/dimchansky"><i class="fa fa-linkedin fa-fw fa-2x"></i></a>
+			<a href="https://www.youtube.com/user/Dimchansky"><i class="fa fa-youtube fa-fw fa-2x"></i></a>
+			<a href="../../../../../atom.xml"><i class="fa fa-rss fa-fw fa-2x"></i></a>
+		</div>
+	</div>
 
-			<div id="content">
-				<article>
+	<div id="wrapper">
+		<div id="content">
+			<article>
 <header>
 <h1>Оценка приблизительного числа уникальных элементов в наборе данных</h1>
 
@@ -43,6 +58,20 @@
 </header>
 
 <section>
+
+<nav id="toc" role="doc-toc">
+<strong>Содержание</strong>
+<label for="contents">⊕</label>
+<input type="checkbox" id="contents">
+<ul>
+<li><a href="#простой-интуитивный-подход" id="toc-простой-интуитивный-подход">Простой интуитивный подход</a></li>
+<li><a href="#бит-паттерны" id="toc-бит-паттерны">Бит-паттерны</a></li>
+<li><a href="#hashing" id="toc-hashing">Хеширование и стохастическое усреднение</a></li>
+<li><a href="#алгоритм-loglog" id="toc-алгоритм-loglog">Алгоритм LogLog</a></li>
+<li><a href="#HyperLogLog" id="toc-HyperLogLog">Увеличиваем точность: алгоритмы SuperLogLog и HyperLogLog</a></li>
+<li><a href="#параллельные-вычисления-и-объединение-результатов" id="toc-параллельные-вычисления-и-объединение-результатов">Параллельные вычисления и объединение результатов</a></li>
+</ul>
+</nav>
 <p>Предположим, что у нас имеется очень большой набор данных с дубликатами, который не помещается в оперативную память.
 Нам необходимо подсчитать число уникальных элементов в этом наборе. Можно было бы, конечно, отсортировать данные на диске и подсчитать точно,
 но мы этого делать не хотим, нам бы хотелось подсчитать это хотя бы приблизительно за один проход. В таком случае мы сможем даже на живом потоке
@@ -53,7 +82,7 @@
 случайных чисел равномерно распределенных в интервале [0, 65535] (16 бит), сгенерируем 20 таких наборов:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th style="text-align: center;"></th>
 <th style="text-align: right;">1</th>
 <th style="text-align: right;">2</th>
@@ -65,7 +94,7 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>1</strong></td>
 <td style="text-align: right;">13502</td>
 <td style="text-align: right;">36579</td>
@@ -75,7 +104,7 @@
 <td style="text-align: right;">53564</td>
 <td style="text-align: right;">59377</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>2</strong></td>
 <td style="text-align: right;">17937</td>
 <td style="text-align: right;">19130</td>
@@ -85,7 +114,7 @@
 <td style="text-align: right;">41461</td>
 <td style="text-align: right;">64064</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>3</strong></td>
 <td style="text-align: right;">1990</td>
 <td style="text-align: right;">20617</td>
@@ -95,7 +124,7 @@
 <td style="text-align: right;">64366</td>
 <td style="text-align: right;">65231</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>4</strong></td>
 <td style="text-align: right;">2138</td>
 <td style="text-align: right;">34490</td>
@@ -105,7 +134,7 @@
 <td style="text-align: right;">61211</td>
 <td style="text-align: right;">65005</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>5</strong></td>
 <td style="text-align: right;">5315</td>
 <td style="text-align: right;">12263</td>
@@ -115,7 +144,7 @@
 <td style="text-align: right;">42119</td>
 <td style="text-align: right;">64785</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>6</strong></td>
 <td style="text-align: right;">1991</td>
 <td style="text-align: right;">22488</td>
@@ -125,7 +154,7 @@
 <td style="text-align: right;">50001</td>
 <td style="text-align: right;">62747</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>7</strong></td>
 <td style="text-align: right;">7796</td>
 <td style="text-align: right;">9622</td>
@@ -135,7 +164,7 @@
 <td style="text-align: right;">52085</td>
 <td style="text-align: right;">59447</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>8</strong></td>
 <td style="text-align: right;">12773</td>
 <td style="text-align: right;">14504</td>
@@ -145,7 +174,7 @@
 <td style="text-align: right;">47102</td>
 <td style="text-align: right;">57553</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>9</strong></td>
 <td style="text-align: right;">14313</td>
 <td style="text-align: right;">40951</td>
@@ -155,7 +184,7 @@
 <td style="text-align: right;">56244</td>
 <td style="text-align: right;">58678</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>10</strong></td>
 <td style="text-align: right;">5674</td>
 <td style="text-align: right;">11150</td>
@@ -165,7 +194,7 @@
 <td style="text-align: right;">54957</td>
 <td style="text-align: right;">58749</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>11</strong></td>
 <td style="text-align: right;">6614</td>
 <td style="text-align: right;">31546</td>
@@ -175,7 +204,7 @@
 <td style="text-align: right;">53048</td>
 <td style="text-align: right;">65534</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>12</strong></td>
 <td style="text-align: right;">8226</td>
 <td style="text-align: right;">12394</td>
@@ -185,7 +214,7 @@
 <td style="text-align: right;">47084</td>
 <td style="text-align: right;">59321</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>13</strong></td>
 <td style="text-align: right;">30696</td>
 <td style="text-align: right;">43977</td>
@@ -195,7 +224,7 @@
 <td style="text-align: right;">54624</td>
 <td style="text-align: right;">61442</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>14</strong></td>
 <td style="text-align: right;">14582</td>
 <td style="text-align: right;">18790</td>
@@ -205,7 +234,7 @@
 <td style="text-align: right;">43476</td>
 <td style="text-align: right;">53779</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>15</strong></td>
 <td style="text-align: right;">4490</td>
 <td style="text-align: right;">12246</td>
@@ -215,7 +244,7 @@
 <td style="text-align: right;">45419</td>
 <td style="text-align: right;">60793</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>16</strong></td>
 <td style="text-align: right;">4359</td>
 <td style="text-align: right;">6158</td>
@@ -225,7 +254,7 @@
 <td style="text-align: right;">58989</td>
 <td style="text-align: right;">60863</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>17</strong></td>
 <td style="text-align: right;">9703</td>
 <td style="text-align: right;">14772</td>
@@ -235,7 +264,7 @@
 <td style="text-align: right;">44407</td>
 <td style="text-align: right;">62458</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>18</strong></td>
 <td style="text-align: right;">333</td>
 <td style="text-align: right;">4083</td>
@@ -245,7 +274,7 @@
 <td style="text-align: right;">46201</td>
 <td style="text-align: right;">55737</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>19</strong></td>
 <td style="text-align: right;">18371</td>
 <td style="text-align: right;">25371</td>
@@ -255,7 +284,7 @@
 <td style="text-align: right;">62821</td>
 <td style="text-align: right;">64802</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>20</strong></td>
 <td style="text-align: right;">3736</td>
 <td style="text-align: right;">6826</td>
@@ -265,7 +294,7 @@
 <td style="text-align: right;">48649</td>
 <td style="text-align: right;">55470</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>avg</strong></td>
 <td style="text-align: right;">9226.95</td>
 <td style="text-align: right;">19897.85</td>
@@ -293,41 +322,41 @@
 <p>Представим наши случайные данные в виде двоичных чисел. Чем меньше число, тем больше в его двоичном представлении старших битов установлено в ноль:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th style="text-align: center;">десятичное представление</th>
 <th style="text-align: center;">двоичное представление</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;"><strong>000</strong></td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;">1</td>
 <td style="text-align: center;"><strong>00</strong>1</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;">2</td>
 <td style="text-align: center;"><strong>0</strong>10</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;">3</td>
 <td style="text-align: center;"><strong>0</strong>11</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;">4</td>
 <td style="text-align: center;">100</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;">5</td>
 <td style="text-align: center;">101</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;">6</td>
 <td style="text-align: center;">110</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;">7</td>
 <td style="text-align: center;">111</td>
 </tr>
@@ -353,7 +382,7 @@
 <col style="width: 24%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th style="text-align: center;"></th>
 <th style="text-align: right;">1</th>
 <th style="text-align: right;">2</th>
@@ -366,7 +395,7 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>1</strong></td>
 <td style="text-align: right;">(13502 = b<strong>00</strong>11010010111110) 2</td>
 <td style="text-align: right;">0</td>
@@ -377,7 +406,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">2</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>2</strong></td>
 <td style="text-align: right;">(17937 = b<strong>0</strong>100011000010001) 1</td>
 <td style="text-align: right;">1</td>
@@ -388,7 +417,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">1</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>3</strong></td>
 <td style="text-align: right;">(1990 = b<strong>00000</strong>11111000110) 5</td>
 <td style="text-align: right;">1</td>
@@ -399,7 +428,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">5</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>4</strong></td>
 <td style="text-align: right;">(2138 = b<strong>0000</strong>100001011010) 4</td>
 <td style="text-align: right;">0</td>
@@ -410,7 +439,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">4</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>5</strong></td>
 <td style="text-align: right;">(5315 = b<strong>000</strong>1010011000011) 3</td>
 <td style="text-align: right;">2</td>
@@ -421,7 +450,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">3</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>6</strong></td>
 <td style="text-align: right;">(1991 = b<strong>00000</strong>11111000111) 5</td>
 <td style="text-align: right;">1</td>
@@ -432,7 +461,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">5</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>7</strong></td>
 <td style="text-align: right;">(7796 = b<strong>000</strong>1111001110100) 3</td>
 <td style="text-align: right;">2</td>
@@ -443,7 +472,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">3</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>8</strong></td>
 <td style="text-align: right;">(12773 = b<strong>00</strong>11000111100101) 2</td>
 <td style="text-align: right;">2</td>
@@ -454,7 +483,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">2</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>9</strong></td>
 <td style="text-align: right;">(14313 = b<strong>00</strong>11011111101001) 2</td>
 <td style="text-align: right;">0</td>
@@ -465,7 +494,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">2</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>10</strong></td>
 <td style="text-align: right;">(5674 = b<strong>000</strong>1011000101010) 3</td>
 <td style="text-align: right;">2</td>
@@ -476,7 +505,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">3</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>11</strong></td>
 <td style="text-align: right;">(6614 = b<strong>000</strong>1100111010110) 3</td>
 <td style="text-align: right;">1</td>
@@ -487,7 +516,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">3</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>12</strong></td>
 <td style="text-align: right;">(8226 = b<strong>00</strong>10000000100010) 2</td>
 <td style="text-align: right;">2</td>
@@ -498,7 +527,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">2</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>13</strong></td>
 <td style="text-align: right;">(30696 = b<strong>0</strong>111011111101000) 1</td>
 <td style="text-align: right;">0</td>
@@ -509,7 +538,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">1</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>14</strong></td>
 <td style="text-align: right;">(14582 = b<strong>00</strong>11100011110110) 2</td>
 <td style="text-align: right;">1</td>
@@ -520,7 +549,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">2</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>15</strong></td>
 <td style="text-align: right;">(4490 = b<strong>000</strong>1000110001010) 3</td>
 <td style="text-align: right;">2</td>
@@ -531,7 +560,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">3</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>16</strong></td>
 <td style="text-align: right;">(4359 = b<strong>000</strong>1000100000111) 3</td>
 <td style="text-align: right;">3</td>
@@ -542,7 +571,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">3</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>17</strong></td>
 <td style="text-align: right;">(9703 = b<strong>00</strong>10010111100111) 2</td>
 <td style="text-align: right;">2</td>
@@ -553,7 +582,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">2</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>18</strong></td>
 <td style="text-align: right;">(333 = b<strong>0000000</strong>101001101) 7</td>
 <td style="text-align: right;">4</td>
@@ -564,7 +593,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">7</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>19</strong></td>
 <td style="text-align: right;">(18371 = b<strong>0</strong>100011111000011) 1</td>
 <td style="text-align: right;">1</td>
@@ -575,7 +604,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">1</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: center;"><strong>20</strong></td>
 <td style="text-align: right;">(3736 = b<strong>0000</strong>111010011000) 4</td>
 <td style="text-align: right;">3</td>
@@ -586,7 +615,7 @@
 <td style="text-align: right;">0</td>
 <td style="text-align: center;">4</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: center;"><strong>avg</strong></td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
@@ -718,27 +747,6 @@ HyperLogLog, то несложно заметить, что можно разб�
 составлять 0.4%).</p>
 </section>
 </article>
-<div class="likebutton">
-	<div class="socbuttons">
-		<div class="twitter">
-			<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/" data-text="Оценка приблизительного числа уникальных элементов в наборе данных" data-via="dimchansky" data-hashtags="cardinality-estimation, big-data, LogLog, SuperLogLog, HyperLogLog">Tweet</a>
-			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-		</div>
-		<div class="facebook">
-			<iframe style="border: none; overflow: hidden; width: 135px; height: 20px;" src="http://www.facebook.com/plugins/like.php?href=https://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/&layout=button_count&show_faces=false&width=135&action=like&colorscheme=light&height=20" height="240" width="320" frameborder="0" scrolling="no"></iframe>
-		</div>
-		<div class="vkontakte"></div>
-		<div class="google">
-			<!-- Place this tag in your head or just before your close body tag. -->
-			<script src="https://apis.google.com/js/platform.js" async defer>
-			  {lang: 'ru'}
-			</script>
-
-			<!-- Place this tag where you want the +1 button to render. -->
-			<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="300"></div>		
-		</div>
-	</div>
-</div>
 <section>
     <div id="disqus_thread"></div>
     <script type="text/javascript">
@@ -756,12 +764,11 @@ HyperLogLog, то несложно заметить, что можно разб�
     <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>		
 </section>
 
-			</div>
-		
-			<div id="footer">
-				Site proudly generated by
-				<a href="http://jaspervdj.be/hakyll">Hakyll</a>
-			</div>		
-		</div>		
-    </body>
+		</div>
+
+		<div id="footer">
+			<hr>
+		</div>
+	</div>
+	</body>
 </html>

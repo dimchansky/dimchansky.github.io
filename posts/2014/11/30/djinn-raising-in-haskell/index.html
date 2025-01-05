@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html lang="ru">
     <head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="chrome=1" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
 		<meta name="author" content="Dmitrij Koniajev" />		
         <title>Магия Haskell - вызываем джина - Непутёвые заметки Димчанского</title>
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
-        <link rel="stylesheet" type="text/css" href="../../../../../css/default.css" />
-		<link rel="stylesheet" type="text/css" href="../../../../../css/syntax.css" />
+		<style>
+			@import url("https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500&family=Fira+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Merriweather:ital,wght@0,300;0,400;1,300;1,400&display=swap");
+		</style>
+		<link rel="stylesheet" href="../../../../../css/main.min.css?v=9ad582" />
+
+		
+		<!-- KaTeX -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css" integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI" crossorigin="anonymous" />
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js" integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t" crossorigin="anonymous"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+		<!-- End KaTeX Code -->
+		
 		
 		<script type="text/javascript">
 		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -18,23 +32,24 @@
 		  ga('send', 'pageview');
 
 		</script>	
-        <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     </head>
-    <body>
-		<div id="wrapper">
-			<div id="header">
-				<div class="header-logo"><h1><a href="../../../../../">Непутёвые заметки Димчанского</a></h1></div>
-				<div class="header-links">
-					<a href="https://twitter.com/dimchansky"><i class="fa fa-twitter fa-fw fa-2x"></i></a>
-					<a href="https://github.com/dimchansky"><i class="fa fa-github fa-fw fa-2x"></i></a>
-					<a href="https://www.linkedin.com/in/dimchansky"><i class="fa fa-linkedin fa-fw fa-2x"></i></a>
-					<a href="https://www.youtube.com/user/Dimchansky"><i class="fa fa-youtube fa-fw fa-2x"></i></a>
-					<a href="../../../../../atom.xml"><i class="fa fa-rss fa-fw fa-2x"></i></a>
-				</div>
-			</div>	
+	<body>
+	<div id="header">
+		<div class="header-logo">
+			<h1><a href="../../../../../">Непутёвые заметки Димчанского</a></h1>
+		</div>
+		<div class="header-links">
+			<a href="https://twitter.com/dimchansky"><i class="fa fa-twitter fa-fw fa-2x"></i></a>
+			<a href="https://github.com/dimchansky"><i class="fa fa-github fa-fw fa-2x"></i></a>
+			<a href="https://www.linkedin.com/in/dimchansky"><i class="fa fa-linkedin fa-fw fa-2x"></i></a>
+			<a href="https://www.youtube.com/user/Dimchansky"><i class="fa fa-youtube fa-fw fa-2x"></i></a>
+			<a href="../../../../../atom.xml"><i class="fa fa-rss fa-fw fa-2x"></i></a>
+		</div>
+	</div>
 
-			<div id="content">
-				<article>
+	<div id="wrapper">
+		<div id="content">
+			<article>
 <header>
 <h1>Магия Haskell - вызываем джина</h1>
 
@@ -43,6 +58,23 @@
 </header>
 
 <section>
+
+<nav id="toc" role="doc-toc">
+<strong>Содержание</strong>
+<label for="contents">⊕</label>
+<input type="checkbox" id="contents">
+<ul>
+<li><a href="#как-вызывать-джина-без-лампы" id="toc-как-вызывать-джина-без-лампы">Как вызывать джина без лампы?</a></li>
+<li><a href="#загадываем-желания" id="toc-загадываем-желания">Загадываем желания</a>
+<ul>
+<li><a href="#команда-sym-type" id="toc-команда-sym-type">Команда <code>&lt;sym&gt; ? &lt;type&gt;</code></a></li>
+<li><a href="#команда-type-sym-vars-type" id="toc-команда-type-sym-vars-type">Команда <code>type &lt;sym&gt; &lt;vars&gt; = &lt;type&gt;</code></a></li>
+<li><a href="#команда-data-sym-vars-type" id="toc-команда-data-sym-vars-type">Команда <code>data &lt;sym&gt; &lt;vars&gt; = &lt;type&gt;</code></a></li>
+<li><a href="#команда-instance-sym-types" id="toc-команда-instance-sym-types">Команда <code>?instance &lt;sym&gt; &lt;types&gt;</code></a></li>
+<li><a href="#команда-class-sym-vars-where-methods" id="toc-команда-class-sym-vars-where-methods">Команда <code>class &lt;sym&gt; &lt;vars&gt; where &lt;methods&gt;</code></a></li>
+</ul></li>
+</ul>
+</nav>
 <p>В мире Haskell есть много интересных пакетов, программ, которых не встретишь в мире ООП ввиду их функциональной направленности.
 Примером одной из таких программ является <a href="https://hackage.haskell.org/package/djinn">djinn</a>, которую создал Lennart Augustsson
 (<a href="https://github.com/augustss/djinn">исходный код</a>). То, что она делает, похоже на уличную магию и, видимо, производит наибольший
@@ -222,27 +254,6 @@ Djinn&gt; ?instance Functor (C r)</code></pre>
 <p>Удачных заклинаний!</p>
 </section>
 </article>
-<div class="likebutton">
-	<div class="socbuttons">
-		<div class="twitter">
-			<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/" data-text="Магия Haskell - вызываем джина" data-via="dimchansky" data-hashtags="haskell, djinn, windows">Tweet</a>
-			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-		</div>
-		<div class="facebook">
-			<iframe style="border: none; overflow: hidden; width: 135px; height: 20px;" src="http://www.facebook.com/plugins/like.php?href=https://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/&layout=button_count&show_faces=false&width=135&action=like&colorscheme=light&height=20" height="240" width="320" frameborder="0" scrolling="no"></iframe>
-		</div>
-		<div class="vkontakte"></div>
-		<div class="google">
-			<!-- Place this tag in your head or just before your close body tag. -->
-			<script src="https://apis.google.com/js/platform.js" async defer>
-			  {lang: 'ru'}
-			</script>
-
-			<!-- Place this tag where you want the +1 button to render. -->
-			<div class="g-plusone" data-size="medium" data-annotation="inline" data-width="300"></div>		
-		</div>
-	</div>
-</div>
 <section>
     <div id="disqus_thread"></div>
     <script type="text/javascript">
@@ -260,12 +271,11 @@ Djinn&gt; ?instance Functor (C r)</code></pre>
     <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>		
 </section>
 
-			</div>
-		
-			<div id="footer">
-				Site proudly generated by
-				<a href="http://jaspervdj.be/hakyll">Hakyll</a>
-			</div>		
-		</div>		
-    </body>
+		</div>
+
+		<div id="footer">
+			<hr>
+		</div>
+	</div>
+	</body>
 </html>
