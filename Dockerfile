@@ -6,18 +6,30 @@ RUN apt-get update && apt-get install -y \
     libgmp-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Enable BuildKit cache mounts
+# (Ensure BuildKit is enabled externally)
+
 # Set the working directory inside the container
 WORKDIR /app
 
+# Copy only the cabal file first to leverage Docker cache
 COPY blog.cabal ./
-COPY site.hs ./
 
-# Install dependencies with cache mounts
-RUN cabal update && \
+# Use cache mounts for Cabal, GHC, and dist-newstyle
+RUN --mount=type=cache,target=/root/.cabal \
+    --mount=type=cache,target=/root/.ghc \
+    --mount=type=cache,target=/app/dist-newstyle \
+    cabal update && \
     cabal build --only-dependencies
 
-# Build and install the executable to /usr/local/bin with cache mounts
-RUN cabal install --overwrite-policy=always --install-method=copy --installdir=/usr/local/bin/
+# Now copy the rest of the source code
+COPY site.hs ./
+
+# Build and install the executable to /usr/local/bin with additional cache mounts
+RUN --mount=type=cache,target=/root/.cabal \
+    --mount=type=cache,target=/root/.ghc \
+    --mount=type=cache,target=/app/dist-newstyle \
+    cabal install --overwrite-policy=always --install-method=copy --installdir=/usr/local/bin/
 
 # Stage 2: Final Image
 FROM debian:bullseye-slim

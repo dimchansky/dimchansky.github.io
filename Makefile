@@ -1,7 +1,7 @@
 IMAGE_NAME=dimchansky-github-io-builder
 
 build-image:
-	docker build -t $(IMAGE_NAME) .
+	DOCKER_BUILDKIT=1 docker build -t $(IMAGE_NAME) .
 
 build-site:
 	docker run --rm \

@@ -5,56 +5,10 @@ import           Data.Functor ((<$>))
 import           Data.List (isSuffixOf)
 import           Data.Monoid (mappend)
 import qualified Data.Set as S
-
-import           Hakyll ( hakyll
-                      , match
-                      , route
-                      , compile
-                      , copyFileCompiler
-                      , compressCssCompiler
-                      , fromList
-                      , setExtension
-                      , loadAndApplyTemplate
-                      , relativizeUrls
-                      , buildTags
-                      , tagsRules
-                      , constField
-                      , bodyField
-                      , renderAtom
-                      , loadAll
-                      , recentFirst
-                      , loadBody
-                      , applyTemplateList
-                      , makeItem
-                      , dateField
-                      , field
-                      , withUrls
-                      , templateCompiler
-                      , renderTagList
-                      , gsubRoute
-                      , composeRoutes
-                      , FeedConfiguration(..)
-                      , Context
-                      , Tags
-                      , Pattern
-                      , Item
-                      , Compiler
-                      , Routes
-                      , fromCapture
-                      , idRoute
-                      , create
-                      , tagsField
-                      , defaultHakyllWriterOptions
-                      , pandocCompilerWith
-                      , defaultHakyllReaderOptions
-                      , defaultContext
-                      , toUrl
-                      , getRoute
-                      , itemIdentifier
-                      )
-
 import           GHC.IO.Encoding
-import           Text.Pandoc.Options (WriterOptions(..), Extension(..), HTMLMathMethod(..))
+import Hakyll
+import           Text.Pandoc.Options
+import           Text.Pandoc.Templates
 import           Text.Pandoc.Extensions (enableExtension)
 
 --------------------------------------------------------------------------------
