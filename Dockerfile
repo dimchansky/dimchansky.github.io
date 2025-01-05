@@ -1,13 +1,10 @@
 # Stage 1: Builder
-FROM haskell:9.4 AS builder
+FROM haskell:9.10.1-bullseye AS builder
 
 # Install system dependencies required by Hakyll
 RUN apt-get update && apt-get install -y \
     libgmp-dev \
     && rm -rf /var/lib/apt/lists/*
-
-# Enable BuildKit cache mounts
-# (Ensure BuildKit is enabled externally)
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -37,7 +34,17 @@ FROM debian:bullseye-slim
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y \
     libgmp10 \
+    curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js v18.x using NodeSource
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install sass globally using npm
+RUN npm install -g sass && \
+    npm cache clean --force
 
 # Set the working directory in the final image
 WORKDIR /app

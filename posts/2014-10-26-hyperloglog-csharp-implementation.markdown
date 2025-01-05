@@ -2,6 +2,8 @@
 title: Имплементация HyperLogLog на C#
 description: Имплементация алгоритма HyperLogLog для приблизительного вычисления числа уникальных элементов в наборе данных на C#
 tags: cardinality-estimation, big-data, HyperLogLog, C#, FNV, MurmurHash3
+katex: true
+toc: true
 ---
 
 ## Описание реализованных методов

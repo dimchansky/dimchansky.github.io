@@ -1,14 +1,19 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+import           Crypto.Hash (Digest, MD5, hashlazy)
 import           Control.Applicative
 import           Data.Functor ((<$>))
+import           Data.Binary (encode)
 import           Data.List (isSuffixOf)
 import           Data.Monoid (mappend)
 import qualified Data.Set as S
-import           GHC.IO.Encoding
+import           Data.Time.Clock (nominalDiffTimeToSeconds)
+import           Data.Time.Clock.POSIX (getPOSIXTime)
+import           GHC.IO.Encoding (utf8, setLocaleEncoding, setFileSystemEncoding, setForeignEncoding)
 import Hakyll
 import           Text.Pandoc.Options
 import           Text.Pandoc.Templates
+import           Text.Pandoc.SideNote (usingSideNotes)
 import           Text.Pandoc.Extensions (enableExtension)
 
 --------------------------------------------------------------------------------
@@ -21,6 +26,40 @@ main = do
 
 runHakyll :: IO ()
 runHakyll = hakyll $ do
+    epoch <- preprocess $ nominalDiffTimeToSeconds <$> getPOSIXTime
+
+    let timeHash = take 6 $ show (hashlazy (encode epoch) :: Digest MD5)
+    let defaultCtxWithTimeHash =
+            constField "timehash" timeHash <>
+            defaultContext
+    let siteCtx =
+          deIndexedUrlField "url" `mappend`
+          constField "root" (siteRoot siteConf) `mappend`
+          constField "gaId" (siteGaId siteConf) `mappend`
+          constField "feedUrl" "/atom.xml" `mappend`
+          defaultCtxWithTimeHash
+    let postCtx =
+            deIndexedUrlField "url" `mappend`
+            dateField "date" "%B %e, %Y" `mappend`
+            dateField "datetime" "%Y-%m-%d" `mappend`
+            siteCtx
+    let tagsCtx tags =
+            tagsField "prettytags" tags `mappend`
+            postCtx
+    let homeCtx tags list =
+            constField "posts" list `mappend`
+            constField "title" "Начало начал" `mappend`
+            field "taglist" (\_ -> renderTagList tags) `mappend`
+            siteCtx
+    let allPostsCtx =
+            constField "title" "Все заметки" `mappend`
+            postCtx
+    let postList tags pattern preprocess' = do
+            postItemTpl <- loadBody "templates/postitem.html"
+            posts <- loadAll pattern
+            processed <- preprocess' posts
+            applyTemplateList postItemTpl (tagsCtx tags) processed
+
     -- Build tags
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
 
@@ -28,27 +67,22 @@ runHakyll = hakyll $ do
         route   idRoute
         compile copyFileCompiler
 
-    -- Compress CSS
-    match "css/*" $ do
-        route   idRoute
-        compile compressCssCompiler
-
-    match (fromList ["about.rst", "contact.markdown"]) $ do
-        route   $ setExtension "html"
-        compile $ pandocMathCompiler
-            >>= loadAndApplyTemplate "templates/default.html" siteCtx
-            >>= relativizeUrls
-            >>= deIndexUrls
+    match "css/**.scss" $ do
+        route   $ setExtension ".min.css"
+        compile $ getResourceString >>=
+            withItemBody (unixFilter "sass" ["--stdin", "--style=compressed"])
 
     match "posts/*" $ do
         route wordpressRoute
-        compile $ pandocMathCompiler
-            >>= loadAndApplyTemplate "templates/post.html"        (tagsCtx tags)
-            >>= loadAndApplyTemplate "templates/socialshare.html" (tagsCtx tags)
-            >>= loadAndApplyTemplate "templates/disqus.html"      (tagsCtx tags)
-            >>= loadAndApplyTemplate "templates/default.html"     (tagsCtx tags)
-            >>= relativizeUrls
-            >>= deIndexUrls
+        compile $ do
+            underlying <- getUnderlying
+            toc <- getMetadataField underlying "toc"
+            pandocCustomCompiler (maybe False (\bool -> bool == "true") toc)
+                >>= loadAndApplyTemplate "templates/post.html"        (tagsCtx tags)
+                >>= loadAndApplyTemplate "templates/disqus.html"      (tagsCtx tags)
+                >>= loadAndApplyTemplate "templates/default.html"     (tagsCtx tags)
+                >>= relativizeUrls
+                >>= deIndexUrls
 
     -- Render posts list
     create ["posts.html"] $ do
@@ -106,65 +140,41 @@ runHakyll = hakyll $ do
             renderAtom myFeedConfiguration feedCtx posts
 
 --------------------------------------------------------------------------------
-pandocMathCompiler :: Compiler (Item String)
-pandocMathCompiler =
-    let mathExtensions = [Ext_tex_math_dollars, Ext_tex_math_double_backslash,
-                          Ext_latex_macros]
-        -- Add math extensions to the existing writer extensions
-        newExtensions = foldr enableExtension (writerExtensions defaultHakyllWriterOptions) mathExtensions
-        writerOptions = defaultHakyllWriterOptions {
-                          writerExtensions = newExtensions,
-                          writerHTMLMathMethod = MathJax ""
-                        }
-    in pandocCompilerWith defaultHakyllReaderOptions writerOptions
+pandocCustomCompiler :: Bool -> Compiler (Item String)
+pandocCustomCompiler withTOC = do
+        tmpl <- either (const Nothing) Just <$> unsafeCompiler (
+            compileTemplate
+            "" $
+            "\n$if(toc)$"
+            <> "\n<nav id=\"toc\" role=\"doc-toc\">"
+            <> "\n<strong>Содержание</strong>"
+            <> "\n<label for=\"contents\">⊕</label>"
+            <> "\n<input type=\"checkbox\" id=\"contents\">"
+            <> "\n$toc$"
+            <> "\n</nav>"
+            <> "\n$endif$"
+            <> "\n$body$"
+            )
 
---------------------------------------------------------------------------------
-siteCtx :: Context String
-siteCtx =
-  deIndexedUrlField "url" `mappend`
-  constField "root" (siteRoot siteConf) `mappend`
-  constField "gaId" (siteGaId siteConf) `mappend`
-  constField "feedUrl" "/atom.xml" `mappend`
-  defaultContext
+        let defaultExtensions = writerExtensions defaultHakyllWriterOptions
+        let mathExtensions =
+                [ Ext_tex_math_dollars
+                , Ext_tex_math_double_backslash
+                , Ext_latex_macros
+                ]
+        let newExtensions = foldr enableExtension defaultExtensions mathExtensions
 
---------------------------------------------------------------------------------
-postCtx :: Context String
-postCtx =
-    deIndexedUrlField "url" `mappend`
-    dateField "date" "%B %e, %Y" `mappend`
-    dateField "datetime" "%Y-%m-%d" `mappend`
-    siteCtx
+        let writerOptions = defaultHakyllWriterOptions
+                { writerExtensions = newExtensions
+                , writerHTMLMathMethod = MathJax ""
+                , writerTableOfContents = withTOC
+                , writerTemplate = tmpl
+                }
 
---------------------------------------------------------------------------------
-tagsCtx :: Tags -> Context String
-tagsCtx tags =
-    tagsField "prettytags" tags `mappend`
-    postCtx
-
---------------------------------------------------------------------------------
-allPostsCtx :: Context String
-allPostsCtx =
-    constField "title" "Все заметки" `mappend`
-    postCtx
-
---------------------------------------------------------------------------------
-homeCtx :: Tags -> String -> Context String
-homeCtx tags list =
-    constField "posts" list `mappend`
-    constField "title" "Начало начал" `mappend`
-    field "taglist" (\_ -> renderTagList tags) `mappend`
-    siteCtx
-
---------------------------------------------------------------------------------
-postList :: Tags
-         -> Pattern
-         -> ([Item String] -> Compiler [Item String])
-         -> Compiler String
-postList tags pattern preprocess' = do
-    postItemTpl <- loadBody "templates/postitem.html"
-    posts <- loadAll pattern
-    processed <- preprocess' posts
-    applyTemplateList postItemTpl (tagsCtx tags) processed
+        pandocCompilerWithTransform
+            defaultHakyllReaderOptions
+            writerOptions
+            usingSideNotes
 
 --------------------------------------------------------------------------------
 stripIndex :: String -> String
@@ -217,5 +227,5 @@ siteConf :: SiteConfiguration
 siteConf = SiteConfiguration
     { siteRoot = "https://dimchansky.github.io"
     , siteGaId = "UA-41629923-3"
-    }	
+    }
 --------------------------------------------------------------------------------      

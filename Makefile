@@ -16,4 +16,7 @@ watch-site:
 	  $(IMAGE_NAME) \
 	  watch --host "0.0.0.0" --port 8080
 
+clean-caches:
+	docker builder prune --force
+
 .PHONY: build-image build-site
