@@ -9,8 +9,9 @@ RUN apt-get update && apt-get install -y \
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy only the cabal file first to leverage Docker cache
+# Copy only the cabal files first to leverage Docker cache
 COPY blog.cabal ./
+COPY cabal.project.freeze ./
 
 # Use cache mounts for Cabal, GHC, and dist-newstyle
 RUN --mount=type=cache,target=/root/.cabal \
