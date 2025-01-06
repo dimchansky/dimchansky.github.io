@@ -226,6 +226,6 @@ myFeedConfiguration = FeedConfiguration
 siteConf :: SiteConfiguration
 siteConf = SiteConfiguration
     { siteRoot = "https://dimchansky.github.io"
-    , siteGaId = "UA-41629923-3"
+    , siteGaId = "G-B1YE0YL6FD"
     }
 --------------------------------------------------------------------------------      
