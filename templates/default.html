@@ -14,6 +14,15 @@
 		</style>
 		<link rel="stylesheet" href="/css/main.min.css?v=$timehash$" />
 
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=$gaId$"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', '$gaId$');
+		</script>
+
 		$if(katex)$
 		<!-- KaTeX -->
 		<link
@@ -37,16 +46,6 @@
 		></script>
 		<!-- End KaTeX Code -->
 		$endif$
-
-		<!-- Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=$gaId$"></script>
-		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag(){dataLayer.push(arguments);}
-			gtag('js', new Date());
-			gtag('config', '$gaId$');
-		</script>
-
     </head>
 	<body>
 	<div id="wrapper">
