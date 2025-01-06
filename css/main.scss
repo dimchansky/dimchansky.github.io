@@ -1,132 +1,96 @@
-$main-text: #000;
-$heading1: #222;
-$heading2: #393939;
-$heading3: #494949;
-$link: #379;
-$header-link-hover: #0097ac;
-$header-background: #f5f5f5;
-$background: #ffffff;
-$border: #e5e5e5;
+//
+// 1. Variables
+//
+$color-heading:            #666;
+$color-border:             #e5e5e5;
+$color-header-bg:          #f5f5f5;
+$color-hover:              #0097ac;
+$color-code-bg:            #f7f7f9;
+$color-linenumbers-border: #aaaaaa;
 
-$serif: "Merriweather", serif;
-$sans-serif: "Fira Sans", sans-serif;
-$monospace: "Fira Mono", monospace;
+$font-body:    Verdana, sans-serif;
+$font-heading: Verdana, Tahoma, sans-serif;
+$font-code:    Menlo, Monaco, "DejaVu Sans Mono", Consolas, monospace;
+$font-like:    Arial;
 
-html {
-    font-size: 18px;
+
+//
+// 2. Base Styles
+//
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
 body {
-    background: $background;
-    color: $main-text;
-    font-family: $sans-serif;
-    font-weight: 300;
-    line-height: 1.5;
-    margin: 0; /* Remove horizontal centering for the body */
-    padding: 0; /* Reset padding for full-width header */
-    width: 100%; /* Ensure body spans the full width of the viewport */
+  max-width: 70em;
+  min-width: 20em;
+  margin: auto;
+  font-family: $font-body;
+  font-style: normal;
+  font-size: 11pt;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.1em;
+  font-family: $font-heading;
+  font-style: normal;
+  font-weight: normal;
+  color: $color-heading;
+}
+
+table {
+  border-collapse: collapse;
+  border: 1px solid $color-border;
+  margin-left: auto;
+  margin-right: auto;
+
+  td {
+    border: 1px solid $color-border;
+    padding: 4px;
+  }
+
+  th {
+    border: 1px solid $color-border;
+    padding: 6px;
+  }
 }
 
 p,
 ul,
-ol,
-table,
-pre,
-dl {
-    margin: 0 0 20px;
+ol {
+  line-height: 1.6em;
 }
 
 p {
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    hyphens: auto;
-    text-align: justify;
+  margin-bottom: 1.2em;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  color: black;
+  text-align: justify;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: $serif;
-    font-weight: 500;
-    margin: 0 0 20px;
-
-    a,
-    code {
-        font-weight: 500;
-    }
-}
-h1,
-h2,
-h3 {
-    line-height: 1.25;
-}
-h1 {
-    font-size: 2.2rem;
-    color: $heading1;
-}
-h2 {
-    font-size: 1.8rem;
-    color: $heading2;
-}
-h3,
-h4,
-h5,
-h6 {
-    font-size: 1.4rem;
-    color: $heading3;
-}
-
-a {
-    color: $link;
-    text-decoration: underline;
-    font-weight: 500;
-}
-
-small {
-    font-size: 0.9rem;
-}
-
-blockquote {
-    border-left: 1px solid $border;
-    font-style: italic;
-    margin: 0;
-    padding: 0 0 0 20px;
+pre {
+  padding: 5px;
+  overflow-x: auto;
 }
 
 code,
 pre {
-    font-family: $monospace;
-    font-weight: 400;
-}
-pre {
-    background: #fdf6e3;
-    overflow-x: auto;
-    padding: 8px 15px;
-    font-size: 0.8rem;
-}
-code {
-    padding: 1px;
-}
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-th,
-td {
-    border: 1px solid $border;
-    padding: 5px 10px;
-}
-dt {
-    color: #444;
-    font-weight: 500;
-}
-th {
-    color: #444;
+  font-family: $font-code;
+  background-color: $color-code-bg;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 
 img {
@@ -140,164 +104,180 @@ figcaption {
     font-size: 0.9rem;
 }
 
-strong {
-    font-weight: 500;
-}
+//
+// 3. Article Styles
+//
+article {
+  header {
+    margin-bottom: 2em;
 
-header,
-footer {
-    font-size: 0.9rem;
-}
-
-hr {
-    border: 0;
-    background: $border;
-    height: 1px;
-    margin: 0 0 20px;
-}
-
-@media screen and (max-width: 640px) {
-    html {
-        font-size: 16px;
+    p {
+      margin: 0.2em;
+      margin-left: 2em;
     }
+  }
 
-    body {
-        padding-left: 8vw;
-        padding-right: 8vw;
-        word-wrap: break-word;
-    }
+  h1 {
+    font-size: 1.8em;
+    margin-bottom: 0.2em;
+  }
 
-    pre,
-    code {
-        word-wrap: normal;
-    }
+  h2 {
+    font-size: 1.5em;
+  }
 }
 
-@media print {
-    html {
-        font-size: 12pt;
-    }
-
-    body {
-        padding: 0;
-        background: #fff;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    p,
-    span,
-    pre,
-    li {
-        break-inside: avoid;
-    }
-
-    .utterances {
-        display: none;
-    }
+//
+// 4. Layout: Wrapper, Header, Content, Footer
+//
+#wrapper {
+  min-height: 100%;
+  position: relative;
 }
 
-// Sidenotes
-// adapted from https://github.com/edwardtufte/tufte-css
+#header {
+  border-bottom: 1px solid $color-border;
+  background-color: $color-header-bg;
+  display: table;
+  width: 100%;
+  height: 4em;
+  overflow: hidden;
+  padding: 0 0.5em;
 
-.sidenote,
-.marginnote {
-    float: right;
-    clear: right;
-    margin-right: -50%;
-    width: 40%;
-    margin-top: 0.3rem;
-    margin-bottom: 0;
-    font-size: 0.9rem;
-    line-height: 1.3;
-    vertical-align: baseline;
-    position: relative;
-}
-
-.sidenote-number {
-    counter-increment: sidenote-counter;
-}
-.sidenote-number:after,
-.sidenote:before {
-    position: relative;
-    vertical-align: baseline;
-}
-.sidenote-number:after {
-    content: counter(sidenote-counter);
-    font-size: 0.9rem;
-    top: -0.5rem;
-    left: 0.1rem;
-}
-.sidenote:before {
-    content: counter(sidenote-counter) " ";
-    font-size: 0.9rem;
-    top: -0.5rem;
-}
-
-blockquote .sidenote,
-blockquote .marginnote {
-    margin-right: -82%;
-    min-width: 59%;
-    text-align: left;
-}
-
-.marginnote > code,
-.sidenote > code {
-    font-size: 0.9rem;
-}
-
-input.margin-toggle {
-    display: none;
-}
-
-label.sidenote-number {
+  .header-logo,
+  .header-links {
     display: inline-block;
-    max-height: 1.5rem;
-}
-label.margin-toggle:not(.sidenote-number) {
-    display: none;
-}
+    margin: 0;
+    padding: 0;
+    height: 3em;
+    display: table-cell;
+    vertical-align: middle;
 
-@media (max-width: 1536px) {
-    label.margin-toggle:not(.sidenote-number) {
-        display: inline;
-    }
+    a {
+      color: #000;
+      text-decoration: none;
 
-    .sidenote,
-    .marginnote {
-        display: none;
+      &:hover {
+        color: $color-hover;
+        text-decoration: none;
+      }
     }
+  }
 
-    .sidenote-number:after {
-        color: $link;
-        text-decoration: underline;
-        font-weight: 500;
+  .header-logo {
+    h1 {
+      font-size: 2.2em;
+      color: black;
+      margin: 0;
+      padding: 0;
     }
+  }
 
-    .margin-toggle:checked + .sidenote,
-    .margin-toggle:checked + .marginnote {
-        display: block;
-        float: left;
-        left: 1rem;
-        clear: both;
-        width: 95%;
-        margin: 0.9rem 2.5% 0;
-        vertical-align: baseline;
-        position: relative;
-    }
-
-    label {
-        cursor: pointer;
-    }
+  .header-links {
+    text-align: right;
+  }
 }
 
+#content {
+  padding-top: 0;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-bottom: 2em; // matches footer height
+}
+
+#footer {
+  text-align: center;
+  border-top: 1px solid $color-border;
+  width: 100%;
+  height: 2em; // footer height
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+//
+// 5. Pandoc Source Code Tables
+//
+/* Generated by pandoc. */
+table.sourceCode,
+tr.sourceCode,
+td.lineNumbers,
+td.sourceCode {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  border: none;
+  background-color: $color-code-bg;
+}
+
+table.sourceCode pre,
+pre.sourceCode {
+  margin: 0;
+  padding: 5px;
+  border: 0;
+  vertical-align: baseline;
+  border: none;
+  background-color: $color-code-bg;
+}
+
+td.lineNumbers {
+  border-right: 1px solid $color-linenumbers-border;
+  text-align: right;
+  color: $color-linenumbers-border;
+}
+
+.sourceCode {
+  span.kw {
+    color: #007020;
+    font-weight: bold;
+  }
+  span.dt {
+    color: #902000;
+  }
+  span.dv {
+    color: #40a070;
+  }
+  span.bn {
+    color: #40a070;
+  }
+  span.fl {
+    color: #40a070;
+  }
+  span.ch {
+    color: #4070a0;
+  }
+  span.st {
+    color: #4070a0;
+  }
+  span.co {
+    color: #60a0b0;
+    font-style: italic;
+  }
+  span.ot {
+    color: #007020;
+  }
+  span.al {
+    color: red;
+    font-weight: bold;
+  }
+  span.fu {
+    color: #06287e;
+  }
+  span.re {
+    // intentionally empty
+  }
+  span.er {
+    color: red;
+    font-weight: bold;
+  }
+}
+
+//
+// 6. TOC
+//
 // Table of Contents
 // adapted from https://github.com/jez/pandoc-markdown-css-theme/blob/master/public/css/theme.css
-
 nav#toc {
     margin-bottom: 20px;
 
@@ -306,7 +286,6 @@ nav#toc {
     }
 
     label {
-        color: $link;
         cursor: pointer;
     }
 
@@ -339,14 +318,14 @@ nav#toc {
         }
     }
 
-    @media screen and (min-width: 1537px) {
+    @media screen and (min-width: 1863px) {
         top: 20vh;
         position: sticky;
 
         float: left;
         clear: left;
-        margin-left: -50%;
-        width: 40%;
+        margin-left: -45%;
+        width: 35%;
         margin-bottom: 1.5rem;
         padding-left: 1.5rem;
         overflow-y: auto;
@@ -359,118 +338,4 @@ nav#toc {
             display: block;
         }
     }
-}
-
-// Gruvbox Light, lightly modified to achieve a colour contrast of >= 4.5
-// adapted from https://www.jonashietala.se/blog/2019/01/25/site_restyle_and_update/#changes-to-code-display
-// and https://github.com/treeman/jonashietala/blob/857c2944ef2807106619df8f1be9a820ea8080f9/css/code.scss
-
-// Light Background
-$gb-lm-bg: #f9f5d7;
-
-// Light Foreground
-$gb-lm-fg: #282828;
-$gb-lm-fg4: #7a6d62;
-
-// Light Colors
-$gb-lm-light-red: #9d0006;
-$gb-lm-light-green: #726d0d;
-$gb-lm-light-yellow: #976411;
-$gb-lm-light-blue: #076678;
-$gb-lm-light-purple: #8f3f71;
-$gb-lm-light-aqua: #427b58;
-$gb-lm-light-orange: #af3a03;
-$gb-lm-light-gray: #7a6d62;
-
-pre {
-    background-color: $gb-lm-bg;
-    color: $gb-lm-fg;
-}
-// Just eyeballed which classes comes up, couldn't find a good reference
-code.sourceCode {
-    span.kw { color: $gb-lm-light-aqua; } // Keyword
-    span.dt { color: $gb-lm-light-yellow; } // Datatype
-    span.dv, span.bn, span.fl, span.ch { color: $gb-lm-light-purple; } // DecVal, BaseN, Float, Char
-    span.st { color: $gb-lm-light-green; } // String
-    span.co {
-        color: $gb-lm-fg4;
-        font-style: italic;
-    } // Comment
-    span.ot { color: $gb-lm-light-aqua; } // OtherToken
-    span.fu { color: $gb-lm-light-green; } // Function
-    span.re { color: $gb-lm-fg4; } // Region marker
-    span.er, span.al {
-        color: $gb-lm-fg;
-        font-weight: bold;
-    } // Error red, Alert red
-    span.im { color: $gb-lm-light-orange; } // @font-face, "foo.h" in include pragma
-    span.pp { color: $gb-lm-light-aqua; } // pragma directive
-    span.cf { color: $gb-lm-light-red; } // for
-    span.sc { color: $gb-lm-light-orange; } // \n
-    span.op { color: $gb-lm-light-gray; } // Operator
-    span.cn { color: $gb-lm-light-blue; } // CSS hash value color
-}
-
-/* === Header Styles Start === */
-
-#header {
-    width: 100%; /* Full width of the viewport */
-    height: 4em;
-    background-color: $header-background;
-    border-bottom: 1px solid $border;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1em; /* Add consistent padding */
-    box-sizing: border-box; /* Include padding in width */
-
-    .header-logo {
-        flex: 1;
-        a {
-            color: $main-text;
-            text-decoration: none;
-
-            &:hover {
-                color: $header-link-hover;
-            }
-        }
-        h1 {
-            color: $main-text;
-            margin: 0;
-        }
-    }
-
-    .header-links {
-        display: flex;
-        align-items: center; /* Center icons vertically */
-        justify-content: flex-end; /* Align to the right */
-        gap: 0.5em; /* Space between icons */
-        overflow: hidden; /* Prevent overflow */
-        flex-wrap: wrap; /* Ensure links wrap within the container */
-
-        a {
-            color: $main-text;
-            text-decoration: none;
-
-            &:hover {
-                color: $header-link-hover;
-            }
-        }
-
-        i {
-            font-size: 1.5em; /* Adjust icon size if necessary */
-        }
-    }
-}
-
-/* === Header Styles End === */
-
-#wrapper {
-    max-width: 720px; /* Constrain content width */
-    margin: 0 auto; /* Center the content horizontally */
-    padding: 0 1rem;
-}
-
-#content {
-    margin: 2rem 0;
 }
