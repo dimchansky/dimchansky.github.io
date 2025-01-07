@@ -139,6 +139,17 @@ runHakyll = hakyll $ do
             posts <- fmap (take 10) . recentFirst =<< loadAll "posts/*"
             renderAtom myFeedConfiguration feedCtx posts
 
+    create ["sitemap.xml"] $ do
+        route   idRoute
+        compile $ do
+            posts <- loadAll "posts/*"
+            let sitemapCtx =
+                    listField "posts" postCtx (return posts) <>
+                    siteCtx
+
+            makeItem ""
+                >>= loadAndApplyTemplate "templates/sitemap.xml" sitemapCtx
+
 --------------------------------------------------------------------------------
 pandocCustomCompiler :: Bool -> Compiler (Item String)
 pandocCustomCompiler withTOC = do

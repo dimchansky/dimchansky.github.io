@@ -3,6 +3,7 @@ title: Создаем блог с помощью Hakyll
 description: Подробное описание процесса создания блога на github с помощью Hakyll под Windows
 tags: hakyll, haskell, windows
 katex: true
+published: true
 ---
 
 [Hakyll](http://jaspervdj.be/hakyll/) является движком для генерации статических сайтов, написанном на 

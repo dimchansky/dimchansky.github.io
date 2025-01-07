@@ -4,6 +4,7 @@ description: "Рассказываю о том, как перебрал кучу
 tags: мотоцикл, Honda, CB650R, E-clutch, обзор, жизнь
 katex: true
 toc: true
+published: true
 ---
 
 ## Процесс выбора первого мотоцикла

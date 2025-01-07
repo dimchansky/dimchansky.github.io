@@ -2,6 +2,7 @@
 title: Ним на Elm
 description: Игра Ним написанная на языке программирования Elm
 tags: nim, game, elm, frp, haskell
+published: true
 ---
 
 Написал [игру Ним](/elmnim/) на [Elm](http://elm-lang.org/) (компилируется в JavaScript) - это экзотика в виде очень урезанного диалекта Haskell. Хотелось 

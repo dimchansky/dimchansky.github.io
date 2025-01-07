@@ -3,6 +3,7 @@ title: В гостях у KTU
 description: Расширенный доклад "Real life applications of mathematics" в Каунасском технологическом университете (KTU)
 tags: adform, academy
 katex: true
+published: true
 ---
 
 16 декабря 2014 г. на факультете математических и естественных наук Каунасского технологического университета (KTU) [проходила

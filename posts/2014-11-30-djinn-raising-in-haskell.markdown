@@ -4,6 +4,7 @@ description: Генерирование кода функции по ее тип
 tags: haskell, djinn, windows
 katex: true
 toc: true
+published: true
 ---
 
 В мире Haskell есть много интересных пакетов, программ, которых не встретишь в мире ООП ввиду их функциональной направленности.

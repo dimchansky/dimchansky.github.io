@@ -2,6 +2,7 @@
 title: Real Life Applications of Mathematics
 description: Слайды с доклада "Real life applications of mathematics" в Adform Academy
 tags: adform, academy
+published: true
 ---
 
 [Слайды](/real-life-applications-of-mathematics/) с [доклада "Real life applications of mathematics" в Adform Аcademy](http://academy.adform.com/lectures-and-seminars/real-life-applications-of-mathematics/)
