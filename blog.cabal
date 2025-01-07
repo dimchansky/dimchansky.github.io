@@ -13,6 +13,7 @@ executable site
                         cryptohash,
                         pandoc-sidenote,
                         pandoc-types,
-                        time
+                        time,
+                        regex-compat
   ghc-options:         -threaded
   default-language:    Haskell2010

@@ -339,3 +339,28 @@ nav#toc {
         }
     }
 }
+
+//
+// 7. Youtube enbedded video
+//
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 30px;
+    height: 0;
+    overflow: hidden;
+
+    iframe,
+    object,
+    embed {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.video-wrapper {
+    max-width: 100%;
+}
