@@ -15,7 +15,7 @@
     <title>Черновик: Как я искал идеальный первый мотоцикл и почему выбрал Honda CB650R E-Clutch</title>
     <link href="https://dimchansky.github.io/posts/2025/01/04/honda-cb650r-review/" />
     <id>https://dimchansky.github.io/posts/2025/01/04/honda-cb650r-review/</id>
-    <published>2025-01-04T00:00:00Z</published>
+    <published>true</published>
     <updated>2025-01-04T00:00:00Z</updated>
     <summary type="html"><![CDATA[Рассказываю о том, как перебрал кучу вариантов, учитывая свой рост, требования для сдачи на категорию А и тягу к неоклассике. В итоге выбрал Honda CB650R E-Clutch — делюсь впечатлениями от электронного сцепления и нюансами эксплуатации в реальной жизни.]]></summary>
 </entry>
@@ -23,7 +23,7 @@
     <title>В гостях у KTU</title>
     <link href="https://dimchansky.github.io/posts/2014/12/31/real-life-applications-of-mathematics/" />
     <id>https://dimchansky.github.io/posts/2014/12/31/real-life-applications-of-mathematics/</id>
-    <published>2014-12-31T00:00:00Z</published>
+    <published>true</published>
     <updated>2014-12-31T00:00:00Z</updated>
     <summary type="html"><![CDATA[Расширенный доклад "Real life applications of mathematics" в Каунасском технологическом университете (KTU)]]></summary>
 </entry>
@@ -31,7 +31,7 @@
     <title>Магия Haskell - вызываем джина</title>
     <link href="https://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/" />
     <id>https://dimchansky.github.io/posts/2014/11/30/djinn-raising-in-haskell/</id>
-    <published>2014-11-30T00:00:00Z</published>
+    <published>true</published>
     <updated>2014-11-30T00:00:00Z</updated>
     <summary type="html"><![CDATA[Генерирование кода функции по ее типу с помощью джина (djinn)]]></summary>
 </entry>
@@ -39,7 +39,7 @@
     <title>Примеры применения Haskell в реальной жизни</title>
     <link href="https://dimchansky.github.io/posts/2014/11/05/haskell-real-life-use/" />
     <id>https://dimchansky.github.io/posts/2014/11/05/haskell-real-life-use/</id>
-    <published>2014-11-05T00:00:00Z</published>
+    <published>true</published>
     <updated>2014-11-05T00:00:00Z</updated>
     <summary type="html"><![CDATA[Примеры коммерческого использования, коммерческих сервисов, приложений на Haskell]]></summary>
 </entry>
@@ -47,7 +47,7 @@
     <title>Имплементация HyperLogLog на C#</title>
     <link href="https://dimchansky.github.io/posts/2014/10/26/hyperloglog-csharp-implementation/" />
     <id>https://dimchansky.github.io/posts/2014/10/26/hyperloglog-csharp-implementation/</id>
-    <published>2014-10-26T00:00:00Z</published>
+    <published>true</published>
     <updated>2014-10-26T00:00:00Z</updated>
     <summary type="html"><![CDATA[Имплементация алгоритма HyperLogLog для приблизительного вычисления числа уникальных элементов в наборе данных на C#]]></summary>
 </entry>
@@ -55,7 +55,7 @@
     <title>Оценка приблизительного числа уникальных элементов в наборе данных</title>
     <link href="https://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/" />
     <id>https://dimchansky.github.io/posts/2014/10/20/cardinality-estimation-using-hyperloglog/</id>
-    <published>2014-10-20T00:00:00Z</published>
+    <published>true</published>
     <updated>2014-10-20T00:00:00Z</updated>
     <summary type="html"><![CDATA[Применение алгоритма HyperLogLog для приблизительного вычисления числа уникальных элементов в наборе данных]]></summary>
 </entry>
@@ -63,7 +63,7 @@
     <title>Создаем блог с помощью Hakyll</title>
     <link href="https://dimchansky.github.io/posts/2014/10/07/getting-started-with-hakyll/" />
     <id>https://dimchansky.github.io/posts/2014/10/07/getting-started-with-hakyll/</id>
-    <published>2014-10-07T00:00:00Z</published>
+    <published>true</published>
     <updated>2014-10-07T00:00:00Z</updated>
     <summary type="html"><![CDATA[Подробное описание процесса создания блога на github с помощью Hakyll под Windows]]></summary>
 </entry>
@@ -71,7 +71,7 @@
     <title>Первый пост</title>
     <link href="https://dimchansky.github.io/posts/2014/10/06/first-post/" />
     <id>https://dimchansky.github.io/posts/2014/10/06/first-post/</id>
-    <published>2014-10-06T00:00:00Z</published>
+    <published>true</published>
     <updated>2014-10-06T00:00:00Z</updated>
     <summary type="html"><![CDATA[Описывает начало очередного витка спирали жизни]]></summary>
 </entry>
@@ -79,7 +79,7 @@
     <title>Ним на Elm</title>
     <link href="https://dimchansky.github.io/posts/2014/08/18/nim-game-in-elm/" />
     <id>https://dimchansky.github.io/posts/2014/08/18/nim-game-in-elm/</id>
-    <published>2014-08-18T00:00:00Z</published>
+    <published>true</published>
     <updated>2014-08-18T00:00:00Z</updated>
     <summary type="html"><![CDATA[Игра Ним написанная на языке программирования Elm]]></summary>
 </entry>
@@ -87,7 +87,7 @@
     <title>Real Life Applications of Mathematics</title>
     <link href="https://dimchansky.github.io/posts/2013/07/09/real-life-applications-of-mathematics/" />
     <id>https://dimchansky.github.io/posts/2013/07/09/real-life-applications-of-mathematics/</id>
-    <published>2013-07-09T00:00:00Z</published>
+    <published>true</published>
     <updated>2013-07-09T00:00:00Z</updated>
     <summary type="html"><![CDATA[Слайды с доклада "Real life applications of mathematics" в Adform Academy]]></summary>
 </entry>
