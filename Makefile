@@ -12,7 +12,7 @@ build-site:
 	docker run --rm \
 	  -v "$(PWD):/app" \
 	  $(IMAGE_NAME) \
-	  build
+	  rebuild
 
 .PHONY: watch-site
 watch-site:
