@@ -1,4 +1,4 @@
-IMAGE_NAME=dimchansky-github-io-builder
+IMAGE_NAME=ghcr.io/dimchansky/dimchansky-github-io-builder
 
 .PHONY: all
 all: build-image build-site
@@ -13,6 +13,10 @@ build-site:
 	  -v "$(PWD):/app" \
 	  $(IMAGE_NAME) \
 	  rebuild
+
+.PHONY: push-image
+push-image: build-image
+	docker push $(IMAGE_NAME):latest
 
 .PHONY: watch-site
 watch-site:
