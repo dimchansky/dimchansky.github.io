@@ -14,10 +14,6 @@ build-site:
 	  $(IMAGE_NAME) \
 	  rebuild
 
-.PHONY: push-image
-push-image: build-image
-	docker push $(IMAGE_NAME):latest
-
 .PHONY: watch-site
 watch-site:
 	docker run --rm \
