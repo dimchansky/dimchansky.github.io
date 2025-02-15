@@ -15,11 +15,23 @@ jobs:
         with:
           ref: sources
 
-      # 2. Set up Docker Buildx (optional but recommended)
+      # 2. Set up Docker Buildx.
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # 3. Login to GitHub Container Registry
+      # 3. Filter changes for files that affect the Docker image.
+      - name: Filter changes for Docker image build
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            docker:
+              - 'Dockerfile'
+              - 'site.hs'
+              - 'blog.cabal'
+              - 'cabal.project.freeze'
+
+      # 4. Login to GitHub Container Registry.
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -27,32 +39,34 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 4. Build and push the Docker image
+      # 5. Build and push the Docker image only if relevant files have changed.
       - name: Build and push Docker image
+        if: steps.filter.outputs.docker == 'true'
         uses: docker/build-push-action@v4
         with:
           context: .
           file: Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/dimchansky-github-io-builder:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      # 5. Build the site (this runs "make build-site" to create the _site folder)
+      # 6. Build the site using the (possibly prebuilt) Docker image.
       - name: Build site
         run: make build-site
 
-      # 6. Checkout the master branch into a separate directory (_master).
+      # 7. Checkout the master branch into _master directory.
       - name: Checkout Master Branch
         uses: actions/checkout@v3
         with:
           ref: master
           path: _master
 
-      # 7. Deploy the built site to the master branch.
+      # 8. Deploy the built site to the master branch.
       - name: Deploy site to Master branch
         run: |
-          # Copy the built site into the _master branch folder using rsync
-          rsync -av --delete _site/ _master/
-          
+          # Copy the built site to _master, excluding the .git directory.
+          rsync -av --delete --exclude='.git' _site/ _master/
           cd _master
           
           # Configure git (using GitHub Actions bot identity)
