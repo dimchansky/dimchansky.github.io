@@ -10,8 +10,16 @@
         <email>dimchansky@gmail.com</email>
         
     </author>
-    <updated>2025-01-04T00:00:00Z</updated>
+    <updated>2025-02-20T00:00:00Z</updated>
     <entry>
+    <title>Исследование влияния мотоциклетного шума на слух — результаты Grok 3 и перевод ChatGPT</title>
+    <link href="https://dimchansky.github.io/posts/2025/02/20/grok3-motorcycle-hearing-research/" />
+    <id>https://dimchansky.github.io/posts/2025/02/20/grok3-motorcycle-hearing-research/</id>
+    <published>true</published>
+    <updated>2025-02-20T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Как я воспользовался новой бесплатной нейросетью Grok 3 от Илона Маска, чтобы провести научное исследование о воздействии шума на здоровье слуха мотоциклистов, а затем перевёл и улучшил полученный текст с помощью ChatGPT (модель o1).]]></summary>
+</entry>
+<entry>
     <title>Как я искал идеальный первый мотоцикл и почему выбрал Honda CB650R E-Clutch</title>
     <link href="https://dimchansky.github.io/posts/2025/01/04/honda-cb650r-review/" />
     <id>https://dimchansky.github.io/posts/2025/01/04/honda-cb650r-review/</id>
@@ -82,14 +90,6 @@
     <published>true</published>
     <updated>2014-08-18T00:00:00Z</updated>
     <summary type="html"><![CDATA[Игра Ним написанная на языке программирования Elm]]></summary>
-</entry>
-<entry>
-    <title>Real Life Applications of Mathematics</title>
-    <link href="https://dimchansky.github.io/posts/2013/07/09/real-life-applications-of-mathematics/" />
-    <id>https://dimchansky.github.io/posts/2013/07/09/real-life-applications-of-mathematics/</id>
-    <published>true</published>
-    <updated>2013-07-09T00:00:00Z</updated>
-    <summary type="html"><![CDATA[Слайды с доклада "Real life applications of mathematics" в Adform Academy]]></summary>
 </entry>
 
 </feed>

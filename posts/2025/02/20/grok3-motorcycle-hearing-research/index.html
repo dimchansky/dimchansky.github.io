@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<meta name="author" content="Dmitrij Koniajev" />		
+        <title>Исследование влияния мотоциклетного шума на слух — результаты Grok 3 и перевод ChatGPT - Непутёвые заметки Димчанского</title>
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+		<style>
+			@import url("https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500&family=Fira+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Merriweather:ital,wght@0,300;0,400;1,300;1,400&display=swap");
+		</style>
+		<link rel="stylesheet" href="../../../../../css/main.min.css?v=64014a" />
+
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-B1YE0YL6FD"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'G-B1YE0YL6FD');
+		</script>
+
+		
+		<!-- KaTeX -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css" integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI" crossorigin="anonymous" />
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js" integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t" crossorigin="anonymous"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+		<!-- End KaTeX Code -->
+		
+    </head>
+	<body>
+	<div id="wrapper">
+		<div id="header">
+			<div class="header-logo"><h1><a href="../../../../../">Непутёвые заметки Димчанского</a></h1></div>
+			<div class="header-links">
+				<a href="https://twitter.com/dimchansky"><i class="fa fa-twitter fa-fw fa-2x"></i></a>
+				<a href="https://github.com/dimchansky"><i class="fa fa-github fa-fw fa-2x"></i></a>
+				<a href="https://www.linkedin.com/in/dimchansky"><i class="fa fa-linkedin fa-fw fa-2x"></i></a>
+				<a href="https://www.youtube.com/user/Dimchansky"><i class="fa fa-youtube fa-fw fa-2x"></i></a>
+				<a href="../../../../../atom.xml"><i class="fa fa-rss fa-fw fa-2x"></i></a>
+			</div>
+		</div>
+
+		<div id="content">
+			<article>
+<header>
+<h1>Исследование влияния мотоциклетного шума на слух — результаты Grok 3 и перевод ChatGPT</h1>
+
+<p>Дата: <strong>February 20, 2025</strong></p>
+<p>Метки: <a title="All pages tagged 'мотоцикл'." href="../../../../../tags/%D0%BC%D0%BE%D1%82%D0%BE%D1%86%D0%B8%D0%BA%D0%BB.html" rel="tag">мотоцикл</a>, <a title="All pages tagged 'Grok 3'." href="../../../../../tags/Grok%203.html" rel="tag">Grok 3</a>, <a title="All pages tagged 'перевод'." href="../../../../../tags/%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B4.html" rel="tag">перевод</a>, <a title="All pages tagged 'слух'." href="../../../../../tags/%D1%81%D0%BB%D1%83%D1%85.html" rel="tag">слух</a>, <a title="All pages tagged 'здоровье'." href="../../../../../tags/%D0%B7%D0%B4%D0%BE%D1%80%D0%BE%D0%B2%D1%8C%D0%B5.html" rel="tag">здоровье</a>, <a title="All pages tagged 'AI'." href="../../../../../tags/AI.html" rel="tag">AI</a>, <a title="All pages tagged 'ChatGPT'." href="../../../../../tags/ChatGPT.html" rel="tag">ChatGPT</a></p>
+</header>
+
+<section>
+
+<nav id="toc" role="doc-toc">
+<strong>Содержание</strong>
+<label for="contents">⊕</label>
+<input type="checkbox" id="contents">
+<ul>
+<li><a href="#введение" id="toc-введение">Введение</a></li>
+<li><a href="#ключевые-моменты" id="toc-ключевые-моменты">Ключевые моменты</a></li>
+<li><a href="#влияние-шума-на-слух" id="toc-влияние-шума-на-слух">Влияние шума на слух</a></li>
+<li><a href="#роль-защитных-свойств-шлема-от-ветра-скорости-берушей-и-длительности-воздействия" id="toc-роль-защитных-свойств-шлема-от-ветра-скорости-берушей-и-длительности-воздействия">Роль защитных свойств шлема от ветра, скорости, берушей и длительности воздействия</a></li>
+<li><a href="#удивительный-факт-доминирует-шум-ветра" id="toc-удивительный-факт-доминирует-шум-ветра">Удивительный факт: доминирует шум ветра</a></li>
+<li><a href="#комплексный-анализ-влияния-езды-на-мотоцикле-на-здоровье-слуха" id="toc-комплексный-анализ-влияния-езды-на-мотоцикле-на-здоровье-слуха">Комплексный анализ влияния езды на мотоцикле на здоровье слуха</a>
+<ul>
+<li><a href="#источники-шума-и-их-влияние" id="toc-источники-шума-и-их-влияние">Источники шума и их влияние</a></li>
+<li><a href="#роль-защитных-свойств-шлема-от-ветра" id="toc-роль-защитных-свойств-шлема-от-ветра">Роль защитных свойств шлема от ветра</a></li>
+<li><a href="#влияние-скорости-езды" id="toc-влияние-скорости-езды">Влияние скорости езды</a></li>
+<li><a href="#роль-берушей" id="toc-роль-берушей">Роль берушей</a></li>
+<li><a href="#длительность-воздействия-и-стратегии-снижения-риска" id="toc-длительность-воздействия-и-стратегии-снижения-риска">Длительность воздействия и стратегии снижения риска</a></li>
+<li><a href="#научные-исследования-и-мнения-экспертов" id="toc-научные-исследования-и-мнения-экспертов">Научные исследования и мнения экспертов</a></li>
+<li><a href="#рекомендации-по-предотвращению-потери-слуха" id="toc-рекомендации-по-предотвращению-потери-слуха">Рекомендации по предотвращению потери слуха</a></li>
+<li><a href="#таблица-безопасное-время-воздействия-при-разных-уровнях-шума" id="toc-таблица-безопасное-время-воздействия-при-разных-уровнях-шума">Таблица: Безопасное время воздействия при разных уровнях шума</a></li>
+</ul></li>
+<li><a href="#основные-ссылки" id="toc-основные-ссылки">Основные ссылки</a></li>
+</ul>
+</nav>
+<h2 id="введение">Введение</h2>
+<p>Недавно я услышал, что <a href="https://grok.com/"><strong>Grok 3</strong></a> — продвинутая нейросеть Илона Маска — теперь доступна всем бесплатно и без ограничений. Рассказывают, что она способна:
+- превосходить другие ИИ (GPT-4o, Claude 3.5 Sonnet, Gemini-2 Pro, DeepSeek-V3) в математике, программировании и научных исследованиях;
+- работать на 200 000 чипах Nvidia H100, чего ещё не было в индустрии;
+- удерживать лидерство в рейтинге Chatbot Arena;
+- искать ответы в сети с помощью встроенной DeepSearch и даже выдавать логичные предположения, если готовых ответов нет.</p>
+<p>Услышав это, я решил проверить Grok 3 в деле. Подал ей запрос (промпт), попросив изучить, как езда на мотоцикле влияет на слух, включая шум двигателя и ветра, а также факторы вроде шлемов, скорости и берушей. Оригинальный текст на английском находится здесь:<br />
+<a href="https://grok.com/chat/eecbb7f2-2d19-4aa1-9d80-1f64b17140a7">https://grok.com/chat/eecbb7f2-2d19-4aa1-9d80-1f64b17140a7</a></p>
+<p>Потом я отдал результаты <strong>ChatGPT (модель o1)</strong>, чтобы получить русский перевод и доработать структуру исследования. Ниже вы найдёте конечный вариант статьи — с научными ссылками, фактами и рекомендациями, которые помогут сохранить слух на дороге.</p>
+<hr />
+<h2 id="ключевые-моменты">Ключевые моменты</h2>
+<ul>
+<li>Во время езды на мотоцикле вы подвергаетесь сильному шуму, в основном из-за ветра и двигателя. Это может привести к потере слуха.</li>
+<li>Уровень шума запросто доходит до 110 дБ на высоких скоростях, и без защиты слуха травма может случиться за считаные минуты.</li>
+<li>Обычный шлем частично помогает, но этого недостаточно — беруши остаются важнейшим аксессуаром.</li>
+<li>Для защиты слуха старайтесь выбирать аэродинамичные шлемы, пользоваться берушами и делать небольшие паузы, особенно при скоростной езде.</li>
+</ul>
+<h2 id="влияние-шума-на-слух">Влияние шума на слух</h2>
+<p>Катание на мотоцикле — это уникальные эмоции и драйв. Но нужно помнить, что рев двигателя и свист ветра могут серьёзно ударить по здоровью ушей. На скорости около 60 mph (примерно 97 км/ч) шум ветра достигает 120 дБ — это почти как на громком рок-концерте, и уже через 15 минут без защиты могут начаться проблемы со слухом. Шум двигателя тоже нередко превышает 100 дБ, особенно на высоких оборотах. Всё это повышает риск шумовой потери слуха (NIHL) и тиннитуса (звон в ушах), особенно если вы катаетесь долго и часто.</p>
+<h2 id="роль-защитных-свойств-шлема-от-ветра-скорости-берушей-и-длительности-воздействия">Роль защитных свойств шлема от ветра, скорости, берушей и длительности воздействия</h2>
+<ol type="1">
+<li><p><strong>Шлем и ветер</strong><br />
+Шлем обязательно снижает уровень шума, но даже интегральные модели убирают всего 7–10 дБ. Этого мало, если снаружи все 100 дБ и больше. Аэродинамический дизайн и плотное прилегание в области шеи помогают снизить свист ветра. Некоторые шлемы, например Schuberth C4 Pro, считаются одними из самых тихих, но даже им не обойтись без берушей.</p></li>
+<li><p><strong>Скорость езды</strong><br />
+Чем быстрее вы едете, тем выше уровень шума. Уже на 15 mph (24 км/ч) может быть 85 дБ, а при 60 mph (97 км/ч) легко дойти до 95 дБ и выше. Каждые дополнительные 3 дБ сводят безопасное время вдвое. Например, при 95 дБ у вас есть всего 15 минут, прежде чем начнётся негативное воздействие.</p></li>
+<li><p><strong>Беруши</strong><br />
+Хорошие беруши (Alpine Motosafe, Loop Experience и пр.) обычно снижают шум на 18–25 дБ. Это значит, что вы по-прежнему будете слышать дорогу и других участников движения, но громкость станет намного безопаснее. Специалисты настоятельно рекомендуют использовать беруши при любой продолжительной езде, чтобы избежать усталости, головной боли и тиннитуса.</p></li>
+<li><p><strong>Длительность воздействия</strong><br />
+Чем дольше вы находитесь под влиянием сильного шума, тем выше риск. Если скорость большая, шум постоянно превышает 95 дБ — значит, время в дороге нужно чётко контролировать и делать перерывы. Пара остановок за долгую поездку могут уберечь уши от серьёзных проблем.</p></li>
+</ol>
+<h2 id="удивительный-факт-доминирует-шум-ветра">Удивительный факт: доминирует шум ветра</h2>
+<p>Может показаться, что главный источник громких звуков — это рев мотора, однако исследования показывают обратное: именно ветер становится самым коварным врагом слуха. На шоссе, когда вы разогнались, этот свист почти полностью заглушает другие звуки и быстро достигает опасных уровней, даже под качественным шлемом.</p>
+<hr />
+<h2 id="комплексный-анализ-влияния-езды-на-мотоцикле-на-здоровье-слуха">Комплексный анализ влияния езды на мотоцикле на здоровье слуха</h2>
+<p>Ниже мы детально разберём, какие именно факторы влияют на уши мотоциклиста, и как минимизировать риск потери слуха. Ссылки на исследования, мнения экспертов и полезные рекомендации помогут вам эффективно защитить себя.</p>
+<h3 id="источники-шума-и-их-влияние">Источники шума и их влияние</h3>
+<p>Во время поездки вы сталкиваетесь с двумя главными источниками шума:
+1. <strong>Двигатель.</strong> Шум мотора может легко перешагнуть за 100 дБ, особенно если вы сильно газуете. В исследовании Университета Флориды (<a href="https://research.ufl.edu/publications/explore/v09n3/extract8.html">Down to Earth</a>) это сравнивают с оглушающим уровнем рок-концерта или бензопилы.
+2. <strong>Ветер.</strong> На скорости 60 mph (97 км/ч) и выше можно получить 120 дБ ветрового шума (<a href="https://www.earpeace.com/blogs/bits-and-peaces/motorcycles-your-hearing-whats-the-reality-of-the-risk">EARPEACE</a>). Исследования на <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC539364/">PMC</a> подтверждают, что даже за один час быстрой езды слух может ощутимо «просесть».</p>
+<p>Согласно нормативам OSHA и NIOSH, уровень в 85 дБ уже несёт потенциальную угрозу, а каждое повышение на 3 дБ сокращает безопасное время наполовину (<a href="https://westone.com/safe-exposure-times">Westone</a>).</p>
+<h3 id="роль-защитных-свойств-шлема-от-ветра">Роль защитных свойств шлема от ветра</h3>
+<p>Шлем спасает от травм головы, но не обеспечивает полной шумоизоляции: даже лучшие модели отсекают только часть децибел. Исследование <a href="https://www.campaignforbetterhearing.us/get-informed/faqs/faq-articles/how-do-i-protect-my-ears-when-i-ride-a-motorcycle">Campaign for Better Hearing</a> показало, что интегральные шлемы дают в среднем минус 7–10 дБ. <a href="https://isvr.co.uk/projects/motorcycle-noise/">ISVR Consulting</a> выяснила, что улучшенные уплотнения визора добавляют ещё 5–8 дБ. А вот аэродинамика Schuberth и Shoei, проверенная в аэродинамической трубе, может снизить общий шум вплоть до 70 дБ на скорости 80 км/ч, особенно если используется активное шумоподавление (<a href="https://www.rideapart.com/reviews/428869/motorcycle-helmet-sound-protection/">RideApart</a>).</p>
+<h3 id="влияние-скорости-езды">Влияние скорости езды</h3>
+<p>Скорость — ключевой фактор, определяющий, насколько шумным будет путешествие. На 15 mph (24 км/ч) шум ещё может быть относительно терпимым (85 дБ), но уже на 70 mph (113 км/ч) он подскакивает к 115 дБ, а при 160 км/ч доходит до 110 дБ (<a href="https://www.earpeace.com/blogs/bits-and-peaces/motorcycles-your-hearing-whats-the-reality-of-the-risk">EARPEACE</a>, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC539364/">PMC</a>). При 95 дБ запас по времени совсем небольшой — всего 15 минут (<a href="https://www.audiologyassociates.com/hearing-aids-news/why-are-motorcyclists-at-an-increased-risk-for-hearing-loss/">Audiology Associates</a>).</p>
+<h3 id="роль-берушей">Роль берушей</h3>
+<p>Беруши спасают ситуацию, позволяя снизить шум на 18–25 дБ. Мягкие пенные модели вроде Howard Leight Laser Lite, а также специальные фильтрованные (Loop Experience, NoNoise Motorsport) — отличный вариант, сохраняющий возможность слышать дорожную обстановку и переговорные устройства (<a href="https://billyscrashhelmets.co.uk/best-ear-plugs-for-riding-a-motorcycle/">Billys Crash Helmets</a>, <a href="https://www.revzilla.com/motorcycle-ear-plugs">RevZilla</a>). По данным <a href="https://www.thedrive.com/reviews/29107/best-motorcycle-ear-plugs">The Drive</a>, беруши снижают усталость и риск тиннитуса.</p>
+<h3 id="длительность-воздействия-и-стратегии-снижения-риска">Длительность воздействия и стратегии снижения риска</h3>
+<p>Время напрямую влияет на безопасность: при 100 дБ у вас есть только 15 минут до потенциального вреда (<a href="https://rnid.org.uk/information-and-support/ear-health/protect-your-hearing/how-loud-is-too-loud/">RNID</a>). Если вы проводите в пути несколько часов и не используете беруши, слух может заметно пострадать. Регулярные остановки, чередование скоростного и более спокойного режима, а также хороший шлем плюс беруши — надёжный способ избежать постоянных проблем.</p>
+<h3 id="научные-исследования-и-мнения-экспертов">Научные исследования и мнения экспертов</h3>
+<p>Исследования (Henry Ford и немецкий ADAC) подтверждают, что основную угрозу создаёт именно встречный ветер, а не звук двигателя (<a href="https://www.earpeace.com/blogs/bits-and-peaces/motorcycles-your-hearing-whats-the-reality-of-the-risk">EARPEACE</a>, <a href="https://www.visordown.com/news/general/riders-risk-%25E2%2580%2598permanent-hearing-damage-after-just-15-minutes-62mph">Visordown</a>). Эксперты-аудиологи, например из <a href="https://www.campaignforbetterhearing.us/get-informed/faqs/faq-articles/how-do-i-protect-my-ears-when-i-ride-a-motorcycle">Campaign for Better Hearing</a>, советуют всем мотоциклистам регулярно проверять слух, пользоваться средствами защиты и рассказывать друг другу о вреде шума. Исследование из Нигерии (<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7041349/">PMC</a>) показывает, что многие райдеры просто недооценивают серьёзность этой проблемы.</p>
+<h3 id="рекомендации-по-предотвращению-потери-слуха">Рекомендации по предотвращению потери слуха</h3>
+<ol type="1">
+<li><strong>Беруши — в первую очередь.</strong> Alpine Motosafe, Loop Experience и подобные модели отлично фильтруют лишний шум, при этом вы всё равно слышите дорогу.</li>
+<li><strong>Тихий шлем.</strong> Обращайте внимание на аэродинамику, уплотнения в области шеи и материалы. Schuberth, Shoei и другие производители предлагают специальные «тихие» модели.</li>
+<li><strong>Оптимальный стиль езды.</strong> Сбавляйте скорость при возможности и не забывайте отдыхать. Если шум больше 95 дБ, не катайтесь слишком долго без перерыва.</li>
+<li><strong>Ежегодная проверка слуха.</strong> Отслеживайте изменения, консультируйтесь с врачом. Подбирайте защитные средства под индивидуальные особенности.</li>
+<li><strong>Изучайте тему.</strong> Ресурсы вроде <a href="https://www.cdc.gov/niosh/noise/about/noise.html">CDC</a> и других ссылок в этой статье помогут понять, как защитить себя.</li>
+</ol>
+<h3 id="таблица-безопасное-время-воздействия-при-разных-уровнях-шума">Таблица: Безопасное время воздействия при разных уровнях шума</h3>
+<table>
+<thead>
+<tr>
+<th>Уровень шума (дБ)</th>
+<th>Безопасное время воздействия</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>85</td>
+<td>8 часов</td>
+</tr>
+<tr>
+<td>88</td>
+<td>4 часа</td>
+</tr>
+<tr>
+<td>91</td>
+<td>2 часа</td>
+</tr>
+<tr>
+<td>94</td>
+<td>1 час</td>
+</tr>
+<tr>
+<td>97</td>
+<td>30 минут</td>
+</tr>
+<tr>
+<td>100</td>
+<td>15 минут</td>
+</tr>
+<tr>
+<td>103</td>
+<td>7,5 минут</td>
+</tr>
+<tr>
+<td>106</td>
+<td>3,75 минуты</td>
+</tr>
+<tr>
+<td>109</td>
+<td>1,875 минуты</td>
+</tr>
+<tr>
+<td>112</td>
+<td>~1 минута</td>
+</tr>
+</tbody>
+</table>
+<p><em>(Источник: <a href="https://westone.com/safe-exposure-times">Westone</a>)</em></p>
+<p>Не забывайте: грамотное сочетание берушей, хорошего шлема и понимания безопасных уровней шума сделает поездку комфортной и поможет сохранить слух на долгие годы.</p>
+<hr />
+<h2 id="основные-ссылки">Основные ссылки</h2>
+<ul>
+<li><a href="https://research.ufl.edu/publications/explore/v09n3/extract8.html">Down to Earth: University of Florida study on motorcycle noise levels</a></li>
+<li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC539364/">PMC: Hearing loss in motorcyclists, occupational and medicolegal aspects</a></li>
+<li><a href="https://www.earpeace.com/blogs/bits-and-peaces/motorcycles-your-hearing-whats-the-reality-of-the-risk">EARPEACE: Motorcycles and hearing risk, reality check</a></li>
+<li><a href="https://www.audiologyassociates.com/hearing-aids-news/why-are-motorcyclists-at-an-increased-risk-for-hearing-loss/">Audiology Associates: Increased hearing loss risk for motorcyclists</a></li>
+<li><a href="https://www.loopearplugs.com/blogs/blog/motorcycle-riding-its-impact-on-hearing">Loop Earplugs: Impact of motorcycle riding on hearing</a></li>
+<li><a href="https://billyscrashhelmets.co.uk/best-ear-plugs-for-riding-a-motorcycle/">Billys Crash Helmets: Best ear plugs for motorcycle riding review</a></li>
+<li><a href="https://westone.com/safe-exposure-times">Westone: Safe exposure times for different decibel levels</a></li>
+<li><a href="https://www.campaignforbetterhearing.us/get-informed/faqs/faq-articles/how-do-i-protect-my-ears-when-i-ride-a-motorcycle">Campaign for Better Hearing: Protecting ears while riding motorcycles</a></li>
+<li><a href="https://isvr.co.uk/projects/motorcycle-noise/">ISVR Consulting: Analysis of motorcycle helmet noise</a></li>
+<li><a href="https://www.rideapart.com/reviews/428869/motorcycle-helmet-sound-protection/">RideApart: Quietest motorcycle helmets and sound protection</a></li>
+<li><a href="https://www.revzilla.com/motorcycle-ear-plugs">RevZilla: Motorcycle ear plugs for hearing protection</a></li>
+<li><a href="https://www.thedrive.com/reviews/29107/best-motorcycle-ear-plugs">The Drive: Best motorcycle ear plugs to prevent hearing loss</a></li>
+<li><a href="https://rnid.org.uk/information-and-support/ear-health/protect-your-hearing/how-loud-is-too-loud/">RNID: How loud is too loud, noise exposure guidelines</a></li>
+<li><a href="https://www.cdc.gov/niosh/noise/about/noise.html">CDC: Noise-induced hearing loss and exposure limits</a></li>
+<li><a href="https://www.visordown.com/news/general/riders-risk-%25E2%2580%2598permanent-hearing-damage-after-just-15-minutes-62mph">Visordown: Riders risk permanent hearing damage at high speeds</a></li>
+</ul>
+</section>
+</article>
+<section>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'dimchansky'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>		
+</section>
+
+		</div>
+
+		<div id="footer">
+			Site proudly generated by
+			<a href="http://jaspervdj.be/hakyll">Hakyll</a>
+		</div>
+	</div>
+	</body>
+</html>
