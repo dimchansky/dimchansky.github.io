@@ -16,7 +16,11 @@ published: true
 - удерживать лидерство в рейтинге Chatbot Arena;
 - искать ответы в сети с помощью встроенной DeepSearch и даже выдавать логичные предположения, если готовых ответов нет.
 
-Услышав это, я решил проверить Grok 3 в деле. Подал ей запрос (промпт), попросив изучить, как езда на мотоцикле влияет на слух, включая шум двигателя и ветра, а также факторы вроде шлемов, скорости и берушей. Оригинальный текст на английском находится здесь:  
+Услышав это, я решил проверить Grok 3 в деле. Подал ей запрос (промпт), попросив изучить, как езда на мотоцикле влияет на слух, включая шум двигателя и ветра, а также факторы вроде шлемов, скорости и берушей:
+
+*Research the effects of motorcycle riding on hearing health. Analyze the impact of engine noise, wind noise, and other environmental factors on a rider’s auditory system. Examine the role of helmet wind protection, riding speed, earplugs, and exposure duration in mitigating or exacerbating hearing loss. Include scientific studies, audiology research, and expert opinions. Provide recommendations for preventing hearing damage while riding a motorcycle.*
+
+Оригинальный текст на английском находится здесь:
 [https://grok.com/chat/eecbb7f2-2d19-4aa1-9d80-1f64b17140a7](https://grok.com/chat/eecbb7f2-2d19-4aa1-9d80-1f64b17140a7)
 
 Потом я отдал результаты **ChatGPT (модель o1)**, чтобы получить русский перевод и доработать структуру исследования. Ниже вы найдёте конечный вариант статьи — с научными ссылками, фактами и рекомендациями, которые помогут сохранить слух на дороге.
