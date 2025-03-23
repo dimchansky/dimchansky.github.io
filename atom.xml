@@ -10,8 +10,16 @@
         <email>dimchansky@gmail.com</email>
         
     </author>
-    <updated>2025-02-20T00:00:00Z</updated>
+    <updated>2025-03-23T00:00:00Z</updated>
     <entry>
+    <title>Полный гайд по использованию гидратора для мотоциклистов: как правильно пить в дальних поездках</title>
+    <link href="https://dimchansky.github.io/posts/2025/03/23/motorcycle-hydration-guide/" />
+    <id>https://dimchansky.github.io/posts/2025/03/23/motorcycle-hydration-guide/</id>
+    <published>true</published>
+    <updated>2025-03-23T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Разбираюсь, как правильно использовать мотогидратор на дальних поездках: сколько пить, что пить, как ухаживать за гидратором и делать домашние электролиты.]]></summary>
+</entry>
+<entry>
     <title>Исследование влияния мотоциклетного шума на слух — результаты Grok 3 и перевод ChatGPT</title>
     <link href="https://dimchansky.github.io/posts/2025/02/20/grok3-motorcycle-hearing-research/" />
     <id>https://dimchansky.github.io/posts/2025/02/20/grok3-motorcycle-hearing-research/</id>
@@ -82,14 +90,6 @@
     <published>true</published>
     <updated>2014-10-06T00:00:00Z</updated>
     <summary type="html"><![CDATA[Описывает начало очередного витка спирали жизни]]></summary>
-</entry>
-<entry>
-    <title>Ним на Elm</title>
-    <link href="https://dimchansky.github.io/posts/2014/08/18/nim-game-in-elm/" />
-    <id>https://dimchansky.github.io/posts/2014/08/18/nim-game-in-elm/</id>
-    <published>true</published>
-    <updated>2014-08-18T00:00:00Z</updated>
-    <summary type="html"><![CDATA[Игра Ним написанная на языке программирования Elm]]></summary>
 </entry>
 
 </feed>
