@@ -10,8 +10,16 @@
         <email>dimchansky@gmail.com</email>
         
     </author>
-    <updated>2025-03-23T00:00:00Z</updated>
+    <updated>2026-01-12T00:00:00Z</updated>
     <entry>
+    <title>15 тренировочных упражнений для начинающих пилотов дронов</title>
+    <link href="https://dimchansky.github.io/posts/2026/01/12/15-drone-training-exercises-for-new-pilots/" />
+    <id>https://dimchansky.github.io/posts/2026/01/12/15-drone-training-exercises-for-new-pilots/</id>
+    <published>true</published>
+    <updated>2026-01-12T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Перевод видео от UAV Coach с базовыми упражнениями для новичков: от зависания на уровне глаз до полётов без GPS. Помогает развить уверенность в управлении дроном и освоить ключевые манёвры.]]></summary>
+</entry>
+<entry>
     <title>Полный гайд по использованию гидратора для мотоциклистов: как правильно пить в дальних поездках</title>
     <link href="https://dimchansky.github.io/posts/2025/03/23/motorcycle-hydration-guide/" />
     <id>https://dimchansky.github.io/posts/2025/03/23/motorcycle-hydration-guide/</id>
@@ -82,14 +90,6 @@
     <published>true</published>
     <updated>2014-10-07T00:00:00Z</updated>
     <summary type="html"><![CDATA[Подробное описание процесса создания блога на github с помощью Hakyll под Windows]]></summary>
-</entry>
-<entry>
-    <title>Первый пост</title>
-    <link href="https://dimchansky.github.io/posts/2014/10/06/first-post/" />
-    <id>https://dimchansky.github.io/posts/2014/10/06/first-post/</id>
-    <published>true</published>
-    <updated>2014-10-06T00:00:00Z</updated>
-    <summary type="html"><![CDATA[Описывает начало очередного витка спирали жизни]]></summary>
 </entry>
 
 </feed>
